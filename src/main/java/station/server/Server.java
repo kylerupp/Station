@@ -11,7 +11,8 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.ScrollPane;
 import java.awt.TextArea;
-import javax.swing.JPanel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Server extends Frame {
     
@@ -25,7 +26,14 @@ public class Server extends Frame {
         this.setTitle("Server");
         this.setSize(new Dimension(480, 220));
         this.add(area);
+        this.toFront();
         this.setVisible(true);
+        
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                dispose();
+            }
+        });
     }
 
 }
