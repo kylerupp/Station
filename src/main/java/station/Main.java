@@ -1,5 +1,8 @@
 package station;
 
+import javafx.stage.Stage;
+import station.server.Server;
+
 /**
  * (basic description of the program or class)
  * 
@@ -13,6 +16,8 @@ public class Main {
     
     public static void main(String[] args) {
         System.out.println("Hello world!");
+        Server server = new Server();
+        server.launch(args);
     }
 
 }
