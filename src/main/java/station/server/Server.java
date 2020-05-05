@@ -21,12 +21,10 @@ public class Server extends Frame {
         log = new TextArea();
         ScrollPane area = new ScrollPane();
         area.add(log);
-        JPanel scene = new JPanel();
-        scene.add(area);
-        scene.setPreferredSize(new Dimension(450, 200));
+        area.setPreferredSize(new Dimension(450, 200));
         this.setTitle("Server");
-        this.setSize(new Dimension(450, 200));
-        this.add(scene);
+        this.setSize(new Dimension(480, 220));
+        this.add(area);
         this.setVisible(true);
     }
 
