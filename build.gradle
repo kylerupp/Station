@@ -8,7 +8,7 @@ apply plugin: 'application'
 apply plugin: 'jacoco'
 
 
-mainClassName = 'main.java.Main'
+mainClassName = 'station.Main'
 
 
 // In this section you declare where to find the dependencies of your project
@@ -19,11 +19,6 @@ repositories {
 // In this section you declare the dependencies for your production and test code
 dependencies {
     compile "junit:junit:4.12"
-    compile files('cls/')
-}
-
-test {
-	exclude '**/BlackBoxGiven.class'
 }
 
 apply plugin: "pmd"
