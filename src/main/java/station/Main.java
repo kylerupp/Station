@@ -1,6 +1,5 @@
 package station;
 
-import javafx.stage.Stage;
 import station.server.Server;
 
 /**
@@ -17,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
         Server server = new Server();
-        server.launch(args);
+        server.start();
     }
 
 }

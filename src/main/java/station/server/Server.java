@@ -7,28 +7,27 @@
 
 package station.server;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.stage.Stage;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.ScrollPane;
+import java.awt.TextArea;
+import javax.swing.JPanel;
 
-
-public class Server extends Application {
+public class Server extends Frame {
     
     private TextArea log;
     
-    public void start(Stage stage) {
+    public void start() {
         log = new TextArea();
-        Scene scene = new Scene(new ScrollPane(log), 450, 200);
-        stage.setTitle("Server");
-        stage.setScene(scene);
-        stage.show();
-        stage.setOnCloseRequest(e -> System.exit(0));
-    }
-    
-    public static void launch(String[] args) {
-        Application.launch(args);
+        ScrollPane area = new ScrollPane();
+        area.add(log);
+        JPanel scene = new JPanel();
+        scene.add(area);
+        scene.setPreferredSize(new Dimension(450, 200));
+        this.setTitle("Server");
+        this.setSize(new Dimension(450, 200));
+        this.add(scene);
+        this.setVisible(true);
     }
 
 }
