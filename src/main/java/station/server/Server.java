@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 public class Server extends Application {
     
     private TextArea log;
-    private ScrollPane pane;
     
     public void start(Stage stage) {
         log = new TextArea();
