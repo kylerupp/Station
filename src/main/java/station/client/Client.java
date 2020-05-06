@@ -63,6 +63,9 @@ public class Client extends Frame {
             
             DataOutputStream toServer = new DataOutputStream(socket.getOutputStream());
             
+            fromServer.close();
+            toServer.close();
+            
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
         } catch (IOException ioex) {
