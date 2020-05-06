@@ -8,12 +8,15 @@
 
 package station.client;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,25 +52,36 @@ public class Client extends Frame {
     }
     
     private JPanel connectPanel() {
+        JPanel titlePanel = new JPanel();
         JLabel title = new JLabel("Station");
+        
+        titlePanel.add(title);
+        
+        JPanel connectPanel = new JPanel();
         JLabel label = new JLabel("Name");
+        JButton button = new JButton("Connect");
         
         field.setPreferredSize(new Dimension(100, 20));
+        connectPanel.add(label);
+        connectPanel.add(field);
+        connectPanel.add(button);
         
-        JButton button = new JButton("Connect");
         JPanel panel = new JPanel();
         
-        panel.add(title);
-        panel.add(label);
-        panel.add(field);
-        panel.add(button);
+        panel.add(title, BorderLayout.NORTH);
+        panel.add(connectPanel, BorderLayout.CENTER);
         
         button.addActionListener(e -> {
-            handler = new ClientSideServerHandler();
-            handler.sendMessage(field.getText());
-            //this.remove(mainPanel);
-            mainPanel = sendMessagePanel();
-            this.revalidate();
+            try {
+                handler = new ClientSideServerHandler();
+                handler.sendMessage(field.getText());
+                //this.remove(mainPanel);
+                mainPanel = sendMessagePanel();
+                this.revalidate();
+            } catch(ConnectException conex) {
+                //todo create dialoug
+                System.out.println("Coudnt' connect");
+            }
         });
         
         return panel;

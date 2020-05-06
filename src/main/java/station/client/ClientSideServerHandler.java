@@ -3,6 +3,7 @@ package station.client;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -22,7 +23,7 @@ public class ClientSideServerHandler {
      * Defualt constructor for the client side handler. This constructor uses a
      * default ip of "localHost" with a port of 8000.
      */
-    public ClientSideServerHandler() {
+    public ClientSideServerHandler() throws ConnectException {
         try {
             Socket socket = new Socket("localHost", 8000);
         
