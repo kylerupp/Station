@@ -18,7 +18,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import main.java.station.client.ClientSideServerHandler;
 
 public class Client extends Frame {
     
@@ -35,7 +34,7 @@ public class Client extends Frame {
     public void start() {
         this.setSize(new Dimension(400, 200));
         
-        mainPanel = sendNamePanel();
+        mainPanel = connectPanel();
         this.add(mainPanel);
         
         this.setTitle("Client");
@@ -49,14 +48,16 @@ public class Client extends Frame {
         });
     }
     
-    private JPanel sendNamePanel() {
+    private JPanel connectPanel() {
+        JLabel title = new JLabel("Station");
         JLabel label = new JLabel("Name");
         
         field.setPreferredSize(new Dimension(100, 20));
         
-        JButton button = new JButton("Send");
+        JButton button = new JButton("Connect");
         JPanel panel = new JPanel();
         
+        panel.add(title);
         panel.add(label);
         panel.add(field);
         panel.add(button);
