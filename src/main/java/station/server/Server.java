@@ -45,13 +45,13 @@ public class Server extends Frame {
         new Thread(() -> {
             try {
                 socket = new ServerSocket(8000);
-                log.append("[" + new Date() + "] Server started at " + socket.getInetAddress() 
+                log.append("[" + new Date() + "] Server started at " + socket.getInetAddress().getHostAddress()
                         + ":" + socket.getLocalPort() + "\n");
                 log.append("[" + new Date() + "] Waiting for players to join the session...\n");
                 
                 playerOne = socket.accept();
-                log.append("[" + new Date() + "] Player One joined session with " 
-                        + playerOne.getInetAddress() + "\n");
+                log.append("[" + new Date() + "] Attempting connection with  " 
+                        + playerOne.getInetAddress().getHostAddress() + "\n");
                 
                 log.append("[" + new Date() + "] starting thread with player one.\n");
                 new Thread(() -> {
