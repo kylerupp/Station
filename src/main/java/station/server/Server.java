@@ -19,6 +19,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Date;
+import main.java.station.server.HandleClient;
 
 public class Server extends Frame {
     
@@ -53,6 +54,18 @@ public class Server extends Frame {
                 log.append("[" + new Date() + "] Player One joined session with " 
                         + playerOne.getInetAddress() + "\n");
                 
+                log.append("[" + new Date() + "] starting thread with player one.\n");
+                new Thread(() -> {
+                    try {
+                        HandleClient clientOne = new HandleClient(playerOne.getInputStream());
+                        while(true) {
+                            log.append(clientOne.getMessage() + "\n");
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }).start();
+                
                 playerTwo = socket.accept();
                 log.append("[" + new Date() + "] Player One joined session with " 
                         + playerTwo.getInetAddress() + "\n");
@@ -66,6 +79,7 @@ public class Server extends Frame {
         }).start();
         
         this.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 try {
                     if (socket != null) {

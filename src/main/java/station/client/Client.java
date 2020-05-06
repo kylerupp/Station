@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 public class Client extends Frame {
     
     private final JTextField field = new JTextField();
+    private DataOutputStream toServer;
     
     /**
      * This method starts the client window. Sets appropriate sizes and variables and shows window.
@@ -39,6 +40,11 @@ public class Client extends Frame {
         
         panel.add(field);
         panel.add(button);
+        
+        button.addActionListener(e -> {
+            sendMessage(field.getText());
+        });
+        
         
         this.add(panel);
         
@@ -61,7 +67,7 @@ public class Client extends Frame {
         
             DataInputStream fromServer = new DataInputStream(socket.getInputStream());
             
-            DataOutputStream toServer = new DataOutputStream(socket.getOutputStream());
+            toServer = new DataOutputStream(socket.getOutputStream());
             
             fromServer.close();
             toServer.close();
@@ -70,6 +76,14 @@ public class Client extends Frame {
             ex.printStackTrace();
         } catch (IOException ioex) {
             ioex.printStackTrace();
+        }
+    }
+    
+    private void sendMessage(String msg) {
+        try {
+            toServer.writeUTF(msg);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
