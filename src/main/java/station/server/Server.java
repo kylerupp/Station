@@ -45,7 +45,8 @@ public class Server extends Frame {
         new Thread(() -> {
             try {
                 socket = new ServerSocket(8000);
-                log.append("[" + new Date() + "] Server started at " + socket.getInetAddress().getHostAddress()
+                log.append("[" + new Date() + "] Server started at " 
+                        + socket.getInetAddress().getHostAddress()
                         + ":" + socket.getLocalPort() + "\n");
                 log.append("[" + new Date() + "] Waiting for players to join the session...\n");
                 

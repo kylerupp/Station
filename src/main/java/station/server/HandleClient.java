@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * (basic description of the program or class)
- * 
- * Completion time: (estimation of hours spent on this program)
+ * A class to handle connections to clients.
  *
  * @author kylerupp
  * @version May 6, 2020
@@ -17,6 +15,10 @@ public class HandleClient {
     
     private DataInputStream fromClient;
     
+    /**
+     * Constructor for server side client handler.
+     * @param in Input Stream from client.
+     */
     public HandleClient(InputStream in) {
         fromClient = new DataInputStream(in);
     }

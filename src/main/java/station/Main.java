@@ -19,7 +19,6 @@ public class Main {
         System.out.println("Running Client!");
         Client client = new Client();
         client.start();
-        client.connect();
     }
 
 } 

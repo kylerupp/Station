@@ -14,13 +14,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import main.java.station.client.ClientSideServerHandler;
 
 public class Client extends Frame {
     
@@ -28,6 +26,8 @@ public class Client extends Frame {
     private DataOutputStream toServer;
     private DataInputStream fromServer;
     private JPanel mainPanel;
+    
+    private ClientSideServerHandler handler;
     
     /**
      * This method starts the client window. Sets appropriate sizes and variables and shows window.
@@ -49,25 +49,6 @@ public class Client extends Frame {
         });
     }
     
-    /**
-     * This method connects the client to the server.
-     */
-    public void connect() {
-        try {
-            Socket socket = new Socket("localHost", 8000);
-        
-            fromServer = new DataInputStream(socket.getInputStream());
-            
-            toServer = new DataOutputStream(socket.getOutputStream());
-            
-            
-        } catch (UnknownHostException ex) {
-            ex.printStackTrace();
-        } catch (IOException ioex) {
-            ioex.printStackTrace();
-        }
-    }
-    
     private JPanel sendNamePanel() {
         JLabel label = new JLabel("Name");
         
@@ -81,7 +62,8 @@ public class Client extends Frame {
         panel.add(button);
         
         button.addActionListener(e -> {
-            sendMessage(field.getText());
+            handler = new ClientSideServerHandler();
+            handler.sendMessage(field.getText());
             //this.remove(mainPanel);
             mainPanel = sendMessagePanel();
             this.revalidate();
@@ -101,27 +83,10 @@ public class Client extends Frame {
         panel.add(button);
         
         button.addActionListener(e -> {
-            sendMessage(field.getText());
+            handler.sendMessage(field.getText());
         });
         
         return panel;
-    }
-    
-    private void sendMessage(String msg) {
-        try {
-            toServer.writeUTF(msg);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    private void close() {
-        try {
-            fromServer.close();
-            toServer.close();
-        } catch (IOException ex) {
-            System.out.println("Error closing socket on clients end.");
-        }
     }
 
 }
