@@ -1,4 +1,4 @@
-package main.java.station.server;
+package station.server;
 
 import java.io.DataInputStream;
 import java.io.IOException;

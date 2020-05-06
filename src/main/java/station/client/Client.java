@@ -25,6 +25,7 @@ public class Client extends Frame {
     
     private final JTextField field = new JTextField();
     private DataOutputStream toServer;
+    private DataInputStream fromServer;
     
     /**
      * This method starts the client window. Sets appropriate sizes and variables and shows window.
@@ -65,12 +66,12 @@ public class Client extends Frame {
         try {
             Socket socket = new Socket("localHost", 8000);
         
-            DataInputStream fromServer = new DataInputStream(socket.getInputStream());
+            fromServer = new DataInputStream(socket.getInputStream());
             
             toServer = new DataOutputStream(socket.getOutputStream());
             
-            fromServer.close();
-            toServer.close();
+            //fromServer.close();
+            //toServer.close();
             
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
@@ -84,6 +85,15 @@ public class Client extends Frame {
             toServer.writeUTF(msg);
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+    
+    private void close() {
+        try {
+            fromServer.close();
+            toServer.close();
+        } catch(IOException ex) {
+            System.out.println("Error closing socket on clients end.");
         }
     }
 

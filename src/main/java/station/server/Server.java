@@ -19,7 +19,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Date;
-import main.java.station.server.HandleClient;
 
 public class Server extends Frame {
     
@@ -58,9 +57,7 @@ public class Server extends Frame {
                 new Thread(() -> {
                     try {
                         HandleClient clientOne = new HandleClient(playerOne.getInputStream());
-                        while(true) {
-                            log.append(clientOne.getMessage() + "\n");
-                        }
+                        log.append(clientOne.getMessage() + "\n");
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
