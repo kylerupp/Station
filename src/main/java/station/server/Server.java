@@ -1,8 +1,9 @@
 /**
-* (basic description of the program or class)
+* This class is to handle the main IO for the server.
 *
 * @author Kyle Rupp <kdrupp@asu.edu>
-* @version April 2020
+* @version May 2020
+* @since May 2020
 */
 
 package station.server;
@@ -26,6 +27,9 @@ public class Server extends Frame {
     private Socket playerTwo;
     private ServerSocket socket;
     
+    /**
+     * This method starts the server client. Method shows window and handles server sockets.
+     */
     public void start() {
         log = new TextArea();
         log.setEditable(false);
@@ -41,18 +45,21 @@ public class Server extends Frame {
         new Thread(() -> {
             try {
                 socket = new ServerSocket(8000);
-                log.append("[" + new Date() + "] Server started at " + socket.getInetAddress() + ":" + socket.getLocalPort() + "\n");
+                log.append("[" + new Date() + "] Server started at " + socket.getInetAddress() 
+                        + ":" + socket.getLocalPort() + "\n");
                 log.append("[" + new Date() + "] Waiting for players to join the session...\n");
                 
                 playerOne = socket.accept();
-                log.append("[" + new Date() + "] Player One joined session with " + playerOne.getInetAddress() + "\n");
+                log.append("[" + new Date() + "] Player One joined session with " 
+                        + playerOne.getInetAddress() + "\n");
                 
                 playerTwo = socket.accept();
-                log.append("[" + new Date() + "] Player One joined session with " + playerTwo.getInetAddress() + "\n");
+                log.append("[" + new Date() + "] Player One joined session with " 
+                        + playerTwo.getInetAddress() + "\n");
                 
-            } catch(SocketException se) {
+            } catch (SocketException se) {
                 System.out.println("Closing sockets");
-            } catch(IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 log.append("Error with server handling...");
             }
@@ -61,7 +68,7 @@ public class Server extends Frame {
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 try {
-                    if(socket != null) {
+                    if (socket != null) {
                         socket.close();
                     }
                 } catch (IOException ex) {

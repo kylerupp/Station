@@ -1,8 +1,9 @@
 /**
-* (basic description of the program or class)
+* This class handles the main connectivity for the client.
 *
 * @author Kyle Rupp <kdrupp@asu.edu>
-* @version April 2020
+* @version May 2020
+* @since May 2020
 */
 
 package station.client;
@@ -24,6 +25,9 @@ public class Client extends Frame {
     
     private final JTextField field = new JTextField();
     
+    /**
+     * This method starts the client window. Sets appropriate sizes and variables and shows window.
+     */
     public void start() {
         this.setSize(new Dimension(400, 200));
         
@@ -48,6 +52,9 @@ public class Client extends Frame {
         });
     }
     
+    /**
+     * This method connects the client to the server.
+     */
     public void connect() {
         try {
             Socket socket = new Socket("localHost", 8000);
