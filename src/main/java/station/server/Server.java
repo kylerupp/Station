@@ -57,6 +57,7 @@ public class Server extends Frame {
                 new Thread(() -> {
                     try {
                         HandleClient clientOne = new HandleClient(playerOne.getInputStream());
+                        log.append("Client one's name is " + clientOne.getName() + "\n");
                         log.append(clientOne.getMessage() + "\n");
                     } catch (IOException ex) {
                         ex.printStackTrace();

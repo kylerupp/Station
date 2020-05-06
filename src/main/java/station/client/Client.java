@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -26,6 +27,7 @@ public class Client extends Frame {
     private final JTextField field = new JTextField();
     private DataOutputStream toServer;
     private DataInputStream fromServer;
+    private JPanel mainPanel;
     
     /**
      * This method starts the client window. Sets appropriate sizes and variables and shows window.
@@ -33,21 +35,8 @@ public class Client extends Frame {
     public void start() {
         this.setSize(new Dimension(400, 200));
         
-        JButton button = new JButton();
-        
-        field.setPreferredSize(new Dimension(100, 20));
-        
-        JPanel panel = new JPanel();
-        
-        panel.add(field);
-        panel.add(button);
-        
-        button.addActionListener(e -> {
-            sendMessage(field.getText());
-        });
-        
-        
-        this.add(panel);
+        mainPanel = sendNamePanel();
+        this.add(mainPanel);
         
         this.setTitle("Client");
         this.setVisible(true);
@@ -70,14 +59,51 @@ public class Client extends Frame {
             
             toServer = new DataOutputStream(socket.getOutputStream());
             
-            //fromServer.close();
-            //toServer.close();
             
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
         } catch (IOException ioex) {
             ioex.printStackTrace();
         }
+    }
+    
+    private JPanel sendNamePanel() {
+        JLabel label = new JLabel("Name");
+        
+        field.setPreferredSize(new Dimension(100, 20));
+        
+        JButton button = new JButton("Send");
+        JPanel panel = new JPanel();
+        
+        panel.add(label);
+        panel.add(field);
+        panel.add(button);
+        
+        button.addActionListener(e -> {
+            sendMessage(field.getText());
+            //this.remove(mainPanel);
+            mainPanel = sendMessagePanel();
+            this.revalidate();
+        });
+        
+        return panel;
+    }
+    
+    private JPanel sendMessagePanel() {
+        JButton button = new JButton();
+        
+        field.setPreferredSize(new Dimension(100, 20));
+        
+        JPanel panel = new JPanel();
+        
+        panel.add(field);
+        panel.add(button);
+        
+        button.addActionListener(e -> {
+            sendMessage(field.getText());
+        });
+        
+        return panel;
     }
     
     private void sendMessage(String msg) {
@@ -92,7 +118,7 @@ public class Client extends Frame {
         try {
             fromServer.close();
             toServer.close();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             System.out.println("Error closing socket on clients end.");
         }
     }
