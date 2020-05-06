@@ -1,6 +1,6 @@
 package station;
 
-import station.server.Server;
+import station.client.Client;
 
 /**
  * (basic description of the program or class)
@@ -15,8 +15,9 @@ public class Main {
     
     public static void main(String[] args) {
         System.out.println("Running Client!");
-        Server server = new Server();
-        server.start();
+        Client client = new Client();
+        client.start();
+        client.connect();
     }
 
 } 
