@@ -42,6 +42,7 @@ public class Client extends Frame {
         this.setVisible(true);
         
         this.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 dispose();
             }
