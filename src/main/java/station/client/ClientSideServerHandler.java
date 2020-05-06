@@ -1,4 +1,4 @@
-package main.java.station.client;
+package station.client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
