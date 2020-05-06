@@ -13,13 +13,22 @@ import java.awt.ScrollPane;
 import java.awt.TextArea;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.Date;
 
 public class Server extends Frame {
     
     private TextArea log;
+    private Socket playerOne;
+    private Socket playerTwo;
+    private ServerSocket socket;
     
     public void start() {
         log = new TextArea();
+        log.setEditable(false);
         ScrollPane area = new ScrollPane();
         area.add(log);
         area.setPreferredSize(new Dimension(450, 200));
@@ -29,8 +38,35 @@ public class Server extends Frame {
         this.toFront();
         this.setVisible(true);
         
+        new Thread(() -> {
+            try {
+                socket = new ServerSocket(8000);
+                log.append("[" + new Date() + "] Server started at " + socket.getInetAddress() + ":" + socket.getLocalPort() + "\n");
+                log.append("[" + new Date() + "] Waiting for players to join the session...\n");
+                
+                playerOne = socket.accept();
+                log.append("[" + new Date() + "] Player One joined session with " + playerOne.getInetAddress() + "\n");
+                
+                playerTwo = socket.accept();
+                log.append("[" + new Date() + "] Player One joined session with " + playerTwo.getInetAddress() + "\n");
+                
+            } catch(SocketException se) {
+                System.out.println("Closing sockets");
+            } catch(IOException e) {
+                e.printStackTrace();
+                log.append("Error with server handling...");
+            }
+        }).start();
+        
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
+                try {
+                    if(socket != null) {
+                        socket.close();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 dispose();
             }
         });
