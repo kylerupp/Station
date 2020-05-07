@@ -16,7 +16,6 @@ import java.awt.event.WindowEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ConnectException;
-import java.net.UnknownHostException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,7 +23,8 @@ import javax.swing.JTextField;
 
 public class Client extends Frame {
     
-    private final JTextField field = new JTextField();
+    private final JTextField messageField = new JTextField();
+    private final JTextField nameField = new JTextField();
     private DataOutputStream toServer;
     private DataInputStream fromServer;
     private JPanel mainPanel;
@@ -47,6 +47,9 @@ public class Client extends Frame {
             @Override
             public void windowClosing(WindowEvent e) {
                 dispose();
+                if(handler != null) {
+                    handler.close();
+                }
             }
         });
     }
@@ -61,9 +64,9 @@ public class Client extends Frame {
         JLabel label = new JLabel("Name");
         JButton button = new JButton("Connect");
         
-        field.setPreferredSize(new Dimension(100, 20));
+        nameField.setPreferredSize(new Dimension(100, 20));
         connectPanel.add(label);
-        connectPanel.add(field);
+        connectPanel.add(nameField);
         connectPanel.add(button);
         
         JPanel panel = new JPanel();
@@ -74,9 +77,10 @@ public class Client extends Frame {
         button.addActionListener(e -> {
             try {
                 handler = new ClientSideServerHandler();
-                handler.sendMessage(field.getText());
-                //this.remove(mainPanel);
+                handler.sendMessage(nameField.getText());
+                this.remove(mainPanel);
                 mainPanel = sendMessagePanel();
+                this.add(mainPanel);
                 this.revalidate();
             } catch(ConnectException conex) {
                 //todo create dialoug
@@ -90,15 +94,15 @@ public class Client extends Frame {
     private JPanel sendMessagePanel() {
         JButton button = new JButton();
         
-        field.setPreferredSize(new Dimension(100, 20));
+        messageField.setPreferredSize(new Dimension(100, 20));
         
         JPanel panel = new JPanel();
         
-        panel.add(field);
+        panel.add(messageField);
         panel.add(button);
         
         button.addActionListener(e -> {
-            handler.sendMessage(field.getText());
+            handler.sendMessage(messageField.getText());
         });
         
         return panel;
