@@ -24,7 +24,6 @@ public class Server extends Frame {
     
     private TextArea log;
     private Socket playerOne;
-    private Socket playerTwo;
     private ServerSocket socket;
     
     /**
@@ -64,10 +63,6 @@ public class Server extends Frame {
                         ex.printStackTrace();
                     }
                 }).start();
-                
-                playerTwo = socket.accept();
-                log.append("[" + new Date() + "] Player One joined session with " 
-                        + playerTwo.getInetAddress() + "\n");
                 
             } catch (SocketException se) {
                 System.out.println("Closing sockets");
