@@ -11,10 +11,9 @@ package station.client;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.net.ConnectException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -56,6 +55,7 @@ public class Client extends Frame {
         JPanel titlePanel = new JPanel();
         JLabel title = new JLabel("Station");
         
+        title.setHorizontalAlignment(JLabel.CENTER);
         titlePanel.add(title);
         
         JPanel connectPanel = new JPanel();
@@ -69,6 +69,7 @@ public class Client extends Frame {
         
         JPanel panel = new JPanel();
         
+        panel.setLayout(new BorderLayout());
         panel.add(title, BorderLayout.NORTH);
         panel.add(connectPanel, BorderLayout.CENTER);
         
