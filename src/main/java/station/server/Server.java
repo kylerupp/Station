@@ -23,7 +23,6 @@ import java.util.Date;
 public class Server extends Frame {
     
     private TextArea log;
-    private Socket playerOne;
     private ServerSocket socket;
     
     /**
@@ -54,24 +53,26 @@ public class Server extends Frame {
                 new Thread(() -> {
                     try {
                         //player connecction
-                        Socket player = socket.accept();
-                        log.append("[" + new Date() + "] Attempting connection with  " 
-                            + player.getInetAddress().getHostAddress() + "\n");
+                        while (true) {
+                            Socket player = socket.accept();
+                            log.append("[" + new Date() + "] Attempting connection with  " 
+                                + player.getInetAddress().getHostAddress() + "\n");
                         
-                        //listen for messages
-                        new Thread(() -> {
-                            try {
-                                HandleClient client = new HandleClient(playerOne.getInputStream());
-                                log.append("[" + new Date() + "] Client connected with name " + client.getName() + "\n");
-                                new Thread(() -> {
-                                    while(true) {
-                                        log.append("[" + new Date() + "] " + client.getName() + ": " + client.getMessage() + "\n");
-                                    }
-                                }).start();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        }).start();
+                            //listen for messages
+                            new Thread(() -> {
+                                try {
+                                    HandleClient client = new HandleClient(player.getInputStream());
+                                    log.append("[" + new Date() + "] Client connected with name " + client.getName() + "\n");
+                                    new Thread(() -> {
+                                        while(true) {
+                                            log.append("[" + new Date() + "] " + client.getName() + ": " + client.getMessage() + "\n");
+                                        }
+                                    }).start();
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }).start();
+                        }
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
