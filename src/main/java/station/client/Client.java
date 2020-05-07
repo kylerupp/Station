@@ -25,8 +25,6 @@ public class Client extends Frame {
     
     private final JTextField messageField = new JTextField();
     private final JTextField nameField = new JTextField();
-    private DataOutputStream toServer;
-    private DataInputStream fromServer;
     private JPanel mainPanel;
     
     private ClientSideServerHandler handler;
