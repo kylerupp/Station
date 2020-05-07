@@ -43,24 +43,33 @@ public class Server extends Frame {
         
         new Thread(() -> {
             try {
+                //Start server
                 socket = new ServerSocket(8000);
                 log.append("[" + new Date() + "] Server started at " 
                         + socket.getInetAddress().getHostAddress()
                         + ":" + socket.getLocalPort() + "\n");
                 log.append("[" + new Date() + "] Waiting for players to join the session...\n");
                 
-                playerOne = socket.accept();
-                log.append("[" + new Date() + "] Attempting connection with  " 
-                        + playerOne.getInetAddress().getHostAddress() + "\n");
-                
-                log.append("[" + new Date() + "] starting thread with player one.\n");
+                //listen for connections
                 new Thread(() -> {
                     try {
-                        HandleClient clientOne = new HandleClient(playerOne.getInputStream());
-                        log.append("Client one's name is " + clientOne.getName() + "\n");
+                        //player connecction
+                        Socket player = socket.accept();
+                        log.append("[" + new Date() + "] Attempting connection with  " 
+                            + player.getInetAddress().getHostAddress() + "\n");
+                        
+                        //listen for messages
                         new Thread(() -> {
-                            while(true) {
-                                log.append(clientOne.getMessage() + "\n");
+                            try {
+                                HandleClient client = new HandleClient(playerOne.getInputStream());
+                                log.append("[" + new Date() + "] Client connected with name " + client.getName() + "\n");
+                                new Thread(() -> {
+                                    while(true) {
+                                        log.append("[" + new Date() + "] " + client.getName() + ": " + client.getMessage() + "\n");
+                                    }
+                                }).start();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
                             }
                         }).start();
                     } catch (IOException ex) {
