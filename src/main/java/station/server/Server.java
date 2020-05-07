@@ -62,10 +62,14 @@ public class Server extends Frame {
                             new Thread(() -> {
                                 try {
                                     HandleClient client = new HandleClient(player.getInputStream());
-                                    log.append("[" + new Date() + "] Client connected with name " + client.getName() + "\n");
+                                    log.append("[" + new Date() + "] Client connected with name " 
+                                            + client.getName() + "\n");
+                                    
                                     new Thread(() -> {
-                                        while(true) {
-                                            log.append("[" + new Date() + "] " + client.getName() + ": " + client.getMessage() + "\n");
+                                        while (true) {
+                                            log.append("[" + new Date() + "] " 
+                                                    + client.getName() + ": " 
+                                                    + client.getMessage() + "\n");
                                         }
                                     }).start();
                                 } catch (IOException ex) {
