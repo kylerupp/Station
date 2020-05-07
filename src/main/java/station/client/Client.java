@@ -44,7 +44,7 @@ public class Client extends Frame {
             @Override
             public void windowClosing(WindowEvent e) {
                 dispose();
-                if(handler != null) {
+                if (handler != null) {
                     handler.close();
                 }
             }
@@ -60,11 +60,12 @@ public class Client extends Frame {
         
         JPanel connectPanel = new JPanel();
         JLabel label = new JLabel("Name");
-        JButton button = new JButton("Connect");
         
         nameField.setPreferredSize(new Dimension(100, 20));
         connectPanel.add(label);
         connectPanel.add(nameField);
+        
+        JButton button = new JButton("Connect");
         connectPanel.add(button);
         
         JPanel panel = new JPanel();
@@ -81,7 +82,7 @@ public class Client extends Frame {
                 mainPanel = sendMessagePanel();
                 this.add(mainPanel);
                 this.revalidate();
-            } catch(ConnectException conex) {
+            } catch (ConnectException conex) {
                 //todo create dialoug
                 System.out.println("Coudnt' connect");
             }
