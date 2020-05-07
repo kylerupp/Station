@@ -63,7 +63,7 @@ checkstyle {
     }
   }
 
-task(runServer, dependsOn: 'classes', type: JavaExec) {
+task(server, dependsOn: 'classes', type: JavaExec) {
 	main = 'station.MainServer'
 	classpath = sourceSets.main.runtimeClasspath
 }
