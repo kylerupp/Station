@@ -14,6 +14,7 @@ import java.io.InputStream;
 public class HandleClient {
     
     private DataInputStream fromClient;
+    private String clientName;
     
     /**
      * Constructor for server side client handler.
@@ -41,14 +42,19 @@ public class HandleClient {
      * Listens for a name from the client.
      * @return Name fetched from client.
      */
-    public String getName() {
+    public String getNameFromClient() {
         String ret = "Error with fetching name";
         try {
             ret = fromClient.readUTF();
+            clientName = ret;
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         return ret;
+    }
+    
+    public String getName() {
+        return clientName;
     }
 
 }

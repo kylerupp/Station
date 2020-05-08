@@ -63,7 +63,7 @@ public class Server extends Frame {
                                 try {
                                     HandleClient client = new HandleClient(player.getInputStream());
                                     log.append("[" + new Date() + "] Client connected with name " 
-                                            + client.getName() + "\n");
+                                            + client.getNameFromClient() + "\n");
                                     
                                     new Thread(() -> {
                                         while (true) {
