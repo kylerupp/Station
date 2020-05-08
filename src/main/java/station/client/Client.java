@@ -11,7 +11,7 @@ package station.client;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GridBagLayout;
+import java.awt.TextArea;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.ConnectException;
@@ -26,13 +26,15 @@ public class Client extends Frame {
     private final JTextField nameField = new JTextField();
     private JPanel mainPanel;
     
+    private TextArea feed;
+    
     private ClientSideServerHandler handler;
     
     /**
      * This method starts the client window. Sets appropriate sizes and variables and shows window.
      */
     public void start() {
-        this.setSize(new Dimension(400, 200));
+        this.setSize(new Dimension(600, 400));
         
         mainPanel = connectPanel();
         this.add(mainPanel);
@@ -91,7 +93,8 @@ public class Client extends Frame {
         return panel;
     }
     
-    private JPanel sendMessagePanel() {
+    private JPanel sendMessagePanel() 
+    {        
         JButton button = new JButton();
         
         messageField.setPreferredSize(new Dimension(100, 20));
@@ -100,12 +103,26 @@ public class Client extends Frame {
         
         panel.add(messageField);
         panel.add(button);
+        panel.add(getMessageLog());
         
         button.addActionListener(e -> {
             handler.sendMessage(messageField.getText());
+            feed.append(messageField.getText() + "\n");
+            messageField.setText("");
         });
         
         return panel;
+    }
+    
+    private JPanel getMessageLog() {
+        JPanel chat = new JPanel();
+        
+        feed = new TextArea();
+        feed.setEditable(false);
+        chat.add(feed);
+        chat.setPreferredSize(new Dimension(400, 200));
+        
+        return chat;
     }
 
 }
