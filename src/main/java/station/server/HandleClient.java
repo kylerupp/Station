@@ -1,6 +1,7 @@
 package station.server;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,15 +28,12 @@ public class HandleClient {
     /**
      * Listens for a message from the client.
      * @return client's message.
+     * @throws EOFException if end of stream is reached
+     * @throws IOException ioexception.
      */
-    public String getMessage() {
-        String ret = "Error with message";
-        try {
-            ret = fromClient.readUTF();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return ret;
+    public String getMessage() throws EOFException, IOException {
+
+        return fromClient.readUTF();
     }
     
     /**

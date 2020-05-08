@@ -14,6 +14,7 @@ import java.awt.ScrollPane;
 import java.awt.TextArea;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -66,10 +67,26 @@ public class Server extends Frame {
                                             + client.getNameFromClient() + "\n");
                                     
                                     new Thread(() -> {
-                                        while (true) {
-                                            log.append("[" + new Date() + "] " 
+                                        boolean running = true;
+                                        while (running) {
+                                            try {
+                                                log.append("[" + new Date() + "] " 
                                                     + client.getName() + ": " 
                                                     + client.getMessage() + "\n");
+                                            } catch (EOFException e) {
+                                                log.append("[" + new Date() 
+                                                        + "] Ending connection with " 
+                                                        + client.getName() + "\n");
+                                                running = false;
+                                            } catch (IOException ex) {
+                                                log.append("[" + new Date() 
+                                                        + "] IOException with " 
+                                                        + client.getName() + "\n");
+                                                log.append("[" + new Date() 
+                                                        + "] Ending connection with " 
+                                                        + client.getName() + "\n");
+                                                running = false;
+                                            }
                                         }
                                     }).start();
                                 } catch (IOException ex) {
