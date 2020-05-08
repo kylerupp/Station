@@ -65,25 +65,7 @@ public class Server extends Frame {
                                     appendLog("Client connected with name " 
                                             + client.getNameFromClient());
                                     
-                                    new Thread(() -> {
-                                        boolean running = true;
-                                        while (running) {
-                                            try {
-                                                appendLog(client.getName() + ": " 
-                                                        + client.getMessage());
-                                            } catch (EOFException e) {
-                                                appendLog("Ending connection with " 
-                                                        + client.getName());
-                                                running = false;
-                                            } catch (IOException ex) {
-                                                appendLog("IOException occured with " 
-                                                        + client.getName());
-                                                appendLog("Ending connection with " 
-                                                        + client.getName());
-                                                running = false;
-                                            }
-                                        }
-                                    }).start();
+                                    messageListener(client);
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
                                 }
@@ -115,6 +97,24 @@ public class Server extends Frame {
                 dispose();
             }
         });
+    }
+    
+    private void messageListener(HandleClient client) {
+        new Thread(() -> {
+            boolean running = true;
+            while (running) {
+                try {
+                    appendLog(client.getName() + ": " + client.getMessage());
+                } catch (EOFException e) {
+                    appendLog("Ending connection with " + client.getName());
+                    running = false;
+                } catch (IOException ex) {
+                    appendLog("IOException occured with " + client.getName());
+                    appendLog("Ending connection with " + client.getName());
+                    running = false;
+                }
+            }
+        }).start();
     }
     
     private void appendLog(String msg) {
