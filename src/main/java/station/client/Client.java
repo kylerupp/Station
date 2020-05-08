@@ -11,6 +11,7 @@ package station.client;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -93,17 +94,18 @@ public class Client extends Frame {
         return panel;
     }
     
-    private JPanel sendMessagePanel() 
-    {        
+    private JPanel sendMessagePanel() { 
         JButton button = new JButton();
         
         messageField.setPreferredSize(new Dimension(100, 20));
         
         JPanel panel = new JPanel();
+        JPanel main = new JPanel(new GridLayout(2, 1));
         
         panel.add(messageField);
         panel.add(button);
-        panel.add(getMessageLog());
+        main.add(getMessageLog());
+        main.add(panel);
         
         button.addActionListener(e -> {
             handler.sendMessage(messageField.getText());
@@ -111,7 +113,7 @@ public class Client extends Frame {
             messageField.setText("");
         });
         
-        return panel;
+        return main;
     }
     
     private JPanel getMessageLog() {
