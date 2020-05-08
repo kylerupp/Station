@@ -45,10 +45,9 @@ public class Server extends Frame {
             try {
                 //Start server
                 socket = new ServerSocket(8000);
-                log.append("[" + new Date() + "] Server started at " 
-                        + socket.getInetAddress().getHostAddress()
-                        + ":" + socket.getLocalPort() + "\n");
-                log.append("[" + new Date() + "] Waiting for players to join the session...\n");
+                appendLog("Server started at " + socket.getInetAddress().getHostAddress() 
+                        + ":" + socket.getLocalPort());
+                appendLog("Waiting for clients to join the session...");
                 
                 //listen for connections
                 new Thread(() -> {
@@ -56,35 +55,31 @@ public class Server extends Frame {
                         //player connecction
                         while (true) {
                             Socket player = socket.accept();
-                            log.append("[" + new Date() + "] Attempting connection with  " 
-                                + player.getInetAddress().getHostAddress() + "\n");
+                            appendLog("Attempting connection with " 
+                                    + player.getInetAddress().getHostAddress());
                         
                             //listen for messages
                             new Thread(() -> {
                                 try {
                                     HandleClient client = new HandleClient(player.getInputStream());
-                                    log.append("[" + new Date() + "] Client connected with name " 
-                                            + client.getNameFromClient() + "\n");
+                                    appendLog("Client connected with name " 
+                                            + client.getNameFromClient());
                                     
                                     new Thread(() -> {
                                         boolean running = true;
                                         while (running) {
                                             try {
-                                                log.append("[" + new Date() + "] " 
-                                                    + client.getName() + ": " 
-                                                    + client.getMessage() + "\n");
+                                                appendLog(client.getName() + ": " 
+                                                        + client.getMessage());
                                             } catch (EOFException e) {
-                                                log.append("[" + new Date() 
-                                                        + "] Ending connection with " 
-                                                        + client.getName() + "\n");
+                                                appendLog("Ending connection with " 
+                                                        + client.getName());
                                                 running = false;
                                             } catch (IOException ex) {
-                                                log.append("[" + new Date() 
-                                                        + "] IOException with " 
-                                                        + client.getName() + "\n");
-                                                log.append("[" + new Date() 
-                                                        + "] Ending connection with " 
-                                                        + client.getName() + "\n");
+                                                appendLog("IOException occured with " 
+                                                        + client.getName());
+                                                appendLog("Ending connection with " 
+                                                        + client.getName());
                                                 running = false;
                                             }
                                         }
@@ -120,6 +115,10 @@ public class Server extends Frame {
                 dispose();
             }
         });
+    }
+    
+    private void appendLog(String msg) {
+        log.append("[" + new Date() + "] " + msg + "\n");
     }
 
 }
