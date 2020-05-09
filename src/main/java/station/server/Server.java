@@ -111,7 +111,7 @@ public class Server extends Frame {
             boolean running = true;
             while (running) {
                 try {
-                    String str = client.getName() + ": " + client.getMessage() + "\n";
+                    String str = client.getName() + ": " + client.getMessage();
                     appendLog(str);
                     sendMessage(str);
                 } catch (EOFException e) {
@@ -128,7 +128,7 @@ public class Server extends Frame {
     
     private void sendMessage(String str) {
         for (int i = 0; i < clients.size(); i++) {
-            clients.get(i).sendMessage(str);
+            clients.get(i).sendMessage(str + "\n");
         }
     }
     
