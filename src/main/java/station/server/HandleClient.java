@@ -1,9 +1,11 @@
 package station.server;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * A class to handle connections to clients.
@@ -15,14 +17,16 @@ import java.io.InputStream;
 public class HandleClient {
     
     private DataInputStream fromClient;
+    private DataOutputStream toClient;
     private String clientName;
     
     /**
      * Constructor for server side client handler.
      * @param in Input Stream from client.
      */
-    public HandleClient(InputStream in) {
+    public HandleClient(InputStream in, OutputStream out) {
         fromClient = new DataInputStream(in);
+        toClient = new DataOutputStream(out);
     }
     
     /**
@@ -49,6 +53,19 @@ public class HandleClient {
             ex.printStackTrace();
         }
         return ret;
+    }
+    
+    /**
+     * This method sends the server a message with the given string. This is used for the basic
+     * message passing. The message send should already be formatted with the Date and user.
+     * @param str Message to be sent to the server.
+     */
+    public void sendMessage(String str) {
+        try {
+            toClient.writeUTF(str);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     public String getName() {

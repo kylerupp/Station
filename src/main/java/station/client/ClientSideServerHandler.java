@@ -1,5 +1,6 @@
 package station.client;
 
+import java.awt.TextArea;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -61,6 +62,28 @@ public class ClientSideServerHandler {
         } catch (IOException ex) {
             System.out.println("Error closing socket on clients end.");
         }
+    }
+    
+    /**
+     * This message listens for messages from the server. This is handled in a new thread such that
+     * the program can keep running and go about its business with other methods. Messages sent
+     * to this thread will be appended to the given text area. Messages should already be
+     * formatted.
+     * 
+     * @param feed TextArea to display messages.
+     */
+    public void listenForMessages(TextArea feed) {
+        new Thread(() -> {
+            boolean running = true;
+            while (running) {
+                try {
+                    feed.append(fromServer.readUTF());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    running = false;
+                }
+            }
+        }).start();
     }
 
 }

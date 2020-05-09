@@ -15,6 +15,8 @@ import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.net.ConnectException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -109,9 +111,11 @@ public class Client extends Frame {
         
         button.addActionListener(e -> {
             handler.sendMessage(messageField.getText());
-            feed.append(messageField.getText() + "\n");
+            //feed.append(messageField.getText() + "\n");
             messageField.setText("");
         });
+        
+        handler.listenForMessages(feed);
         
         return main;
     }

@@ -19,12 +19,16 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Server extends Frame {
     
     private TextArea log;
     private ServerSocket socket;
+    
+    private List<HandleClient> clients = new ArrayList<>();
     
     /**
      * This method starts the server client. Method shows window and handles server sockets.
@@ -61,7 +65,10 @@ public class Server extends Frame {
                             //listen for messages
                             new Thread(() -> {
                                 try {
-                                    HandleClient client = new HandleClient(player.getInputStream());
+                                    HandleClient client = new HandleClient(player.getInputStream(), 
+                                            player.getOutputStream());
+                                    
+                                    clients.add(client);
                                     appendLog("Client connected with name " 
                                             + client.getNameFromClient());
                                     
@@ -104,7 +111,9 @@ public class Server extends Frame {
             boolean running = true;
             while (running) {
                 try {
-                    appendLog(client.getName() + ": " + client.getMessage());
+                    String str = client.getName() + ": " + client.getMessage() + "\n";
+                    appendLog(str);
+                    sendMessage(str);
                 } catch (EOFException e) {
                     appendLog("Ending connection with " + client.getName());
                     running = false;
@@ -115,6 +124,12 @@ public class Server extends Frame {
                 }
             }
         }).start();
+    }
+    
+    private void sendMessage(String str) {
+        for (int i = 0; i < clients.size(); i++) {
+            clients.get(i).sendMessage(str);
+        }
     }
     
     private void appendLog(String msg) {
