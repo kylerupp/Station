@@ -62,3 +62,8 @@ checkstyle {
       html.enabled = true
     }
   }
+
+task(server, dependsOn: 'classes', type: JavaExec) {
+	main = 'station.MainServer'
+	classpath = sourceSets.main.runtimeClasspath
+}
