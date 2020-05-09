@@ -37,7 +37,8 @@ public class Client extends Frame {
      * This method starts the client window. Sets appropriate sizes and variables and shows window.
      */
     public void start() {
-        this.setSize(new Dimension(600, 400));
+        this.setSize(new Dimension(460, 300));
+        this.setResizable(false);
         
         mainPanel = connectPanel();
         this.add(mainPanel);
@@ -97,9 +98,9 @@ public class Client extends Frame {
     }
     
     private JPanel sendMessagePanel() { 
-        JButton button = new JButton();
+        JButton button = new JButton("Send");
         
-        messageField.setPreferredSize(new Dimension(100, 20));
+        messageField.setPreferredSize(new Dimension(300, 27));
         
         JPanel panel = new JPanel();
         JPanel main = new JPanel(new GridLayout(2, 1));
