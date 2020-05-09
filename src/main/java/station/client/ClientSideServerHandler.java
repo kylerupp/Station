@@ -20,6 +20,8 @@ public class ClientSideServerHandler {
     DataInputStream fromServer;
     DataOutputStream toServer;
     
+    private String name;
+    
     /**
      * Defualt constructor for the client side handler. This constructor uses a
      * default ip of "localHost" with a port of 8000.
@@ -84,6 +86,14 @@ public class ClientSideServerHandler {
                 }
             }
         }).start();
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getName() {
+        return name;
     }
 
 }

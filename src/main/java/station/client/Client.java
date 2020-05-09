@@ -84,6 +84,7 @@ public class Client extends Frame {
             try {
                 handler = new ClientSideServerHandler();
                 handler.sendMessage(nameField.getText());
+                handler.setName(nameField.getText());
                 this.remove(mainPanel);
                 mainPanel = sendMessagePanel();
                 this.add(mainPanel);
@@ -98,6 +99,9 @@ public class Client extends Frame {
     }
     
     private JPanel sendMessagePanel() { 
+        JLabel name = new JLabel("Welcome, " + handler.getName() + "!");
+        this.add(name, BorderLayout.NORTH);
+        
         JButton button = new JButton("Send");
         
         messageField.setPreferredSize(new Dimension(300, 27));
