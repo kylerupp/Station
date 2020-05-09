@@ -13,10 +13,10 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.TextArea;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.net.ConnectException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -115,9 +115,27 @@ public class Client extends Frame {
         main.add(panel);
         
         button.addActionListener(e -> {
-            handler.sendMessage(messageField.getText());
-            //feed.append(messageField.getText() + "\n");
-            messageField.setText("");
+            sendMessage();
+        });
+        
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyPressed(KeyEvent event) {
+                //if enter
+                if(event.getKeyCode() == 13) {
+                    sendMessage();
+                }
+            }
+            
+            @Override
+            public void keyReleased(KeyEvent event) {
+                
+            }
+            
+            @Override
+            public void keyTyped(KeyEvent event) {
+                
+            }
         });
         
         handler.listenForMessages(feed);
@@ -134,6 +152,11 @@ public class Client extends Frame {
         chat.setPreferredSize(new Dimension(400, 200));
         
         return chat;
+    }
+    
+    private void sendMessage() {
+        handler.sendMessage(messageField.getText());
+        messageField.setText("");
     }
 
 }
