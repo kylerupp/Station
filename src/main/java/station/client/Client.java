@@ -60,9 +60,12 @@ public class Client extends Frame {
     }
     
     private JPanel connectPanel() {
+        JPanel loginPanel = new JPanel(new GridLayout(3, 2));
+        
         JTextField serverField = new JTextField();
         JTextField portField = new JTextField();
-        
+        JLabel serverLabel = new JLabel("Server IP:");
+        JLabel portLabel = new JLabel("Port:");
         
         JPanel titlePanel = new JPanel();
         JLabel title = new JLabel("Station");
@@ -70,21 +73,29 @@ public class Client extends Frame {
         title.setHorizontalAlignment(JLabel.CENTER);
         titlePanel.add(title);
         
-        JPanel connectPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill =  GridBagConstraints.HORIZONTAL;
-        JLabel label = new JLabel("Name");
+        JPanel connectPanel = new JPanel();
+        //GridBagConstraints gbc = new GridBagConstraints();
+        //gbc.fill =  GridBagConstraints.HORIZONTAL;
+        JLabel nameLabel = new JLabel("Name");
         
         nameField.setPreferredSize(new Dimension(100, 20));
         serverField.setPreferredSize(new Dimension(100, 20));
         portField.setPreferredSize(new Dimension(100, 20));
-        connectPanel.add(label, gbc);
+        /*connectPanel.add(label, gbc);
         connectPanel.add(nameField, gbc);
         connectPanel.add(serverField, gbc);
-        connectPanel.add(portField, gbc);
+        connectPanel.add(portField, gbc);*/
+        
+        loginPanel.add(nameLabel);
+        loginPanel.add(nameField);
+        loginPanel.add(serverLabel);
+        loginPanel.add(serverField);
+        loginPanel.add(portLabel);
+        loginPanel.add(portField);
         
         
         JButton button = new JButton("Connect");
+        connectPanel.add(loginPanel);
         connectPanel.add(button);
         
         JPanel panel = new JPanel();
