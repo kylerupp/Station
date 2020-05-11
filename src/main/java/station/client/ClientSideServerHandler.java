@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 /**
@@ -84,6 +85,9 @@ public class ClientSideServerHandler {
             while (running) {
                 try {
                     feed.append(fromServer.readUTF());
+                } catch (SocketException socketEx) { 
+                    System.out.println("Disconnected from client");
+                    running = false;
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     running = false;
