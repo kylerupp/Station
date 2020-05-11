@@ -11,6 +11,8 @@ package station.client;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.event.KeyEvent;
@@ -58,18 +60,29 @@ public class Client extends Frame {
     }
     
     private JPanel connectPanel() {
+        JTextField serverField = new JTextField();
+        JTextField portField = new JTextField();
+        
+        
         JPanel titlePanel = new JPanel();
         JLabel title = new JLabel("Station");
         
         title.setHorizontalAlignment(JLabel.CENTER);
         titlePanel.add(title);
         
-        JPanel connectPanel = new JPanel();
+        JPanel connectPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill =  GridBagConstraints.HORIZONTAL;
         JLabel label = new JLabel("Name");
         
         nameField.setPreferredSize(new Dimension(100, 20));
-        connectPanel.add(label);
-        connectPanel.add(nameField);
+        serverField.setPreferredSize(new Dimension(100, 20));
+        portField.setPreferredSize(new Dimension(100, 20));
+        connectPanel.add(label, gbc);
+        connectPanel.add(nameField, gbc);
+        connectPanel.add(serverField, gbc);
+        connectPanel.add(portField, gbc);
+        
         
         JButton button = new JButton("Connect");
         connectPanel.add(button);
