@@ -69,8 +69,9 @@ public class Server extends Frame {
                                             player.getOutputStream());
                                     
                                     clients.add(client);
-                                    appendLog("Client connected with name " 
-                                            + client.getNameFromClient());
+                                    String name = client.getNameFromClient();
+                                    appendLog(name + " connected.");
+                                    sendMessage(name + " connected.");
                                     
                                     messageListener(client);
                                 } catch (IOException ex) {
@@ -115,11 +116,15 @@ public class Server extends Frame {
                     appendLog(str);
                     sendMessage(str);
                 } catch (EOFException e) {
-                    appendLog("Ending connection with " + client.getName());
+                    String exit = "Ending connection with " + client.getName();
+                    appendLog(exit);
+                    sendMessage(exit);
                     running = false;
                 } catch (IOException ex) {
+                    String exit = "Ending connection with " + client.getName();
                     appendLog("IOException occured with " + client.getName());
-                    appendLog("Ending connection with " + client.getName());
+                    appendLog(exit);
+                    sendMessage(exit);
                     running = false;
                 }
             }
