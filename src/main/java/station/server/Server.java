@@ -116,12 +116,12 @@ public class Server extends Frame {
                     appendLog(str);
                     sendMessage(str);
                 } catch (EOFException e) {
-                    String exit = "Ending connection with " + client.getName();
+                    String exit = client.getName() + " disconnected.";
                     appendLog(exit);
                     sendMessage(exit);
                     running = false;
                 } catch (IOException ex) {
-                    String exit = "Ending connection with " + client.getName();
+                    String exit = client.getName() + " disconnected.";
                     appendLog("IOException occured with " + client.getName());
                     appendLog(exit);
                     sendMessage(exit);
