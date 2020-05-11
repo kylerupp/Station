@@ -148,6 +148,7 @@ public class Client extends Frame {
         
         feed = new TextArea();
         feed.setEditable(false);
+        feed.setPreferredSize(new Dimension(400, 200));
         chat.add(feed);
         chat.setPreferredSize(new Dimension(400, 200));
         
