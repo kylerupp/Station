@@ -131,24 +131,17 @@ public class Client extends Frame {
             sendMessage();
         });
         
-        this.addKeyListener(new KeyListener() {
-            @Override
+        messageField.addKeyListener(new KeyListener() {
             public void keyPressed(KeyEvent event) {
                 //if enter
-                if(event.getKeyCode() == 13) {
+                if (event.getKeyCode() == KeyEvent.VK_ENTER) {
                     sendMessage();
                 }
             }
             
-            @Override
-            public void keyReleased(KeyEvent event) {
-                
-            }
+            public void keyReleased(KeyEvent event){}
             
-            @Override
-            public void keyTyped(KeyEvent event) {
-                
-            }
+            public void keyTyped(KeyEvent event){} 
         });
         
         handler.listenForMessages(feed);
