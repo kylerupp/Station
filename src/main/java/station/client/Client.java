@@ -11,8 +11,6 @@ package station.client;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.event.KeyEvent;
@@ -122,8 +120,17 @@ public class Client extends Frame {
         //listener for connect button
         button.addActionListener(e -> {
             try {
-                handler = new ClientSideServerHandler(serverField.getText(),
-                        Integer.parseInt(portField.getText()));
+                if(serverField.getText().isBlank()) {
+                    if(portField.getText().isBlank()) {
+                        handler = new ClientSideServerHandler("localHost", 8000);
+                    } else {
+                        handler = new ClientSideServerHandler("localHost",
+                                Integer.parseInt(portField.getText()));
+                    }
+                } else {
+                    handler = new ClientSideServerHandler(serverField.getText(),
+                            Integer.parseInt(portField.getText()));
+                }
                 handler.sendMessage(nameField.getText());
                 handler.setName(nameField.getText());
                 this.remove(mainPanel);
