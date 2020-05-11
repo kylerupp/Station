@@ -60,53 +60,70 @@ public class Client extends Frame {
     }
     
     private JPanel connectPanel() {
-        JPanel loginPanel = new JPanel(new GridLayout(3, 2));
-        
-        JTextField serverField = new JTextField();
-        JTextField portField = new JTextField();
-        JLabel serverLabel = new JLabel("Server IP:");
-        JLabel portLabel = new JLabel("Port:");
-        
+        //create main panel;
         JPanel titlePanel = new JPanel();
+        
+        //title
         JLabel title = new JLabel("Station");
         
+        //alignt the title in the middle of the panel and add to main panel
         title.setHorizontalAlignment(JLabel.CENTER);
         titlePanel.add(title);
         
-        JPanel connectPanel = new JPanel();
-        //GridBagConstraints gbc = new GridBagConstraints();
-        //gbc.fill =  GridBagConstraints.HORIZONTAL;
+        //label for the name field
         JLabel nameLabel = new JLabel("Name");
+
+        //panel to hold all the text fields
+        JPanel loginPanel = new JPanel(new GridLayout(3, 2));
         
-        nameField.setPreferredSize(new Dimension(100, 20));
-        serverField.setPreferredSize(new Dimension(100, 20));
-        portField.setPreferredSize(new Dimension(100, 20));
-        /*connectPanel.add(label, gbc);
-        connectPanel.add(nameField, gbc);
-        connectPanel.add(serverField, gbc);
-        connectPanel.add(portField, gbc);*/
-        
+        //add the name paramters to the login panel
         loginPanel.add(nameLabel);
         loginPanel.add(nameField);
+        
+        //field and label for server info
+        JLabel serverLabel = new JLabel("Server IP:");
+        JTextField serverField = new JTextField();
+        
+        //add server parameters to login panel
         loginPanel.add(serverLabel);
         loginPanel.add(serverField);
+        
+        //field and label for port
+        JLabel portLabel = new JLabel("Port:");
+        JTextField portField = new JTextField();
+        
+        //add port to login panel
         loginPanel.add(portLabel);
         loginPanel.add(portField);
         
+        //sizing of objects
+        nameField.setPreferredSize(new Dimension(100, 20));
+        serverField.setPreferredSize(new Dimension(100, 20));
+        portField.setPreferredSize(new Dimension(100, 20));
         
+        //panel to hold login info and connect button
+        JPanel connectPanel = new JPanel();
+        
+        //button for connect
         JButton button = new JButton("Connect");
+        
+        //add button and login info to panel
         connectPanel.add(loginPanel);
         connectPanel.add(button);
         
+        //return panel
         JPanel panel = new JPanel();
         
+        //add title and connect panel
         panel.setLayout(new BorderLayout());
         panel.add(title, BorderLayout.NORTH);
         panel.add(connectPanel, BorderLayout.CENTER);
         
+        //listener for connect button
         button.addActionListener(e -> {
             try {
-                handler = new ClientSideServerHandler(serverField.getText(), Integer.parseInt(portField.getText()));
+                handler = new ClientSideServerHandler(serverField.getText(),
+                        Integer.parseInt(portField.getText()));
                 handler.sendMessage(nameField.getText());
                 handler.setName(nameField.getText());
                 this.remove(mainPanel);
@@ -119,6 +136,7 @@ public class Client extends Frame {
             }
         });
         
+        //return panel
         return panel;
     }
     
@@ -161,11 +179,11 @@ public class Client extends Frame {
     }
     
     private JPanel getMessageLog() {
-        JPanel chat = new JPanel();
-        
         feed = new TextArea();
         feed.setEditable(false);
         feed.setPreferredSize(new Dimension(400, 200));
+        
+        JPanel chat = new JPanel();
         chat.add(feed);
         chat.setPreferredSize(new Dimension(400, 200));
         
