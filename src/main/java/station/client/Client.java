@@ -120,8 +120,8 @@ public class Client extends Frame {
         //listener for connect button
         button.addActionListener(e -> {
             try {
-                if(serverField.getText().isBlank()) {
-                    if(portField.getText().isBlank()) {
+                if (serverField.getText().isBlank()) {
+                    if (portField.getText().isBlank()) {
                         handler = new ClientSideServerHandler("localHost", 8000);
                     } else {
                         handler = new ClientSideServerHandler("localHost",
