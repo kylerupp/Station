@@ -23,12 +23,16 @@ public class ClientSideServerHandler {
     private String name;
     
     /**
-     * Defualt constructor for the client side handler. This constructor uses a
-     * default ip of "localHost" with a port of 8000.
+     * Constructor for the client side server handler. Takes in a host as a string and a port as an
+     * int.
+     * 
+     * @param host String for the host.
+     * @param port Port for the server.
+     * @throws ConnectException if the client cannot connect.
      */
-    public ClientSideServerHandler() throws ConnectException {
+    public ClientSideServerHandler(String host, int port) throws ConnectException {
         try {
-            Socket socket = new Socket("localHost", 8000);
+            Socket socket = new Socket(host, port);
         
             fromServer = new DataInputStream(socket.getInputStream());
             

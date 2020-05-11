@@ -95,7 +95,7 @@ public class Client extends Frame {
         
         button.addActionListener(e -> {
             try {
-                handler = new ClientSideServerHandler();
+                handler = new ClientSideServerHandler(serverField.getText(), Integer.parseInt(portField.getText()));
                 handler.sendMessage(nameField.getText());
                 handler.setName(nameField.getText());
                 this.remove(mainPanel);
