@@ -9,6 +9,7 @@
 package station.client;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -18,6 +19,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.ConnectException;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,7 +39,7 @@ public class Client extends Frame {
      * This method starts the client window. Sets appropriate sizes and variables and shows window.
      */
     public void start() {
-        this.setSize(new Dimension(460, 300));
+        this.setSize(new Dimension(500, 300));
         this.setResizable(false);
         
         mainPanel = connectPanel();
@@ -135,7 +137,8 @@ public class Client extends Frame {
                 handler.setName(nameField.getText());
                 this.remove(mainPanel);
                 mainPanel = sendMessagePanel();
-                this.add(mainPanel);
+                this.add(mainPanel, BorderLayout.CENTER);
+                this.add(getGamePanel(), BorderLayout.EAST);
                 this.revalidate();
             } catch (ConnectException conex) {
                 //todo create dialoug
@@ -189,12 +192,37 @@ public class Client extends Frame {
         feed = new TextArea();
         feed.setEditable(false);
         feed.setPreferredSize(new Dimension(400, 200));
+        //feed.setMinimumSize(new Dimension(400, 200));
+        feed.setSize(new Dimension(400, 200));
         
         JPanel chat = new JPanel();
         chat.add(feed);
         chat.setPreferredSize(new Dimension(400, 200));
         
         return chat;
+    }
+    
+    private JPanel getGamePanel() {
+        JPanel buyPanel = new JPanel();
+        buyPanel.setLayout(new BoxLayout(buyPanel, BoxLayout.Y_AXIS));
+        
+        JButton buyButton = new JButton("Buy");
+        JButton sellButton = new JButton("Sell");
+        buyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sellButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buyPanel.add(buyButton);
+        buyPanel.add(sellButton);
+        
+        buyButton.addActionListener(e -> {
+            sendGameCommand("Bought one unit!");
+        });
+        
+        return buyPanel;
+    }
+    
+    private void sendGameCommand(String str) {
+        handler.sendMessage(str);
+        feed.append(str + "\n");
     }
     
     private void sendMessage() {
