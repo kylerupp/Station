@@ -7,9 +7,12 @@
 
 package station.client;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,8 +27,10 @@ public class ConnectScreen {
     private int size;
     
     public ConnectScreen(int size) {
+        panel = new JPanel();
+        
         this.size = size;
-        panel = new JPanel(new GridLayout(4, 4));
+        JPanel infoPanel = new JPanel(new GridLayout(4, 4));
         
         playerLabels = new ArrayList<JLabel>();
         playerReadyStatus = new ArrayList<JCheckBox>();
@@ -41,6 +46,11 @@ public class ConnectScreen {
             panel.add(check);
         }
         
+        JButton readyButton = new JButton("Ready");
+        readyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        panel.add(readyButton, BorderLayout.NORTH);
+        panel.add(infoPanel, BorderLayout.CENTER);
     }
     
     public boolean updatePlayerLabel(int index, String str) {

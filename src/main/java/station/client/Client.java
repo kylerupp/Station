@@ -140,7 +140,7 @@ public class Client extends Frame {
                 mainPanel = connectStatusPanel.getPanel();
                 //mainPanel = sendMessagePanel();
                 this.add(mainPanel, BorderLayout.CENTER);
-                this.add(getGamePanel(), BorderLayout.EAST);
+                //this.add(getGamePanel(), BorderLayout.EAST);
                 this.revalidate();
             } catch (ConnectException conex) {
                 //todo create dialoug
