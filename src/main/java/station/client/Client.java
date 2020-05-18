@@ -136,7 +136,9 @@ public class Client extends Frame {
                 handler.sendMessage(nameField.getText());
                 handler.setName(nameField.getText());
                 this.remove(mainPanel);
-                mainPanel = sendMessagePanel();
+                ConnectScreen connectStatusPanel = new ConnectScreen(8);
+                mainPanel = connectStatusPanel.getPanel();
+                //mainPanel = sendMessagePanel();
                 this.add(mainPanel, BorderLayout.CENTER);
                 this.add(getGamePanel(), BorderLayout.EAST);
                 this.revalidate();
