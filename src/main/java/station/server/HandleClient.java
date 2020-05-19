@@ -68,8 +68,30 @@ public class HandleClient {
         }
     }
     
+    public int getCommand() throws IOException {
+        return fromClient.readInt();
+    }
+    
+    public void sendCommand(int command) throws IOException  {
+        toClient.writeInt(command);
+    }
+    
     public String getName() {
         return clientName;
+    }
+    
+    public boolean getStatus() throws IOException {
+        return fromClient.readBoolean();
+    }
+    
+    public void sendStatus(int index, boolean ready) throws IOException {
+        toClient.writeInt(index);
+        toClient.writeBoolean(ready);
+    }
+    
+    public void sendConnect(int index, String name) throws IOException {
+        toClient.writeInt(index);
+        toClient.writeUTF(name);
     }
 
 }

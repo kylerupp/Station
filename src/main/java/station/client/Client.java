@@ -24,12 +24,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import station.server.UnknownCommandException;
 
 public class Client extends Frame {
     
     private final JTextField messageField = new JTextField();
     private final JTextField nameField = new JTextField();
     private JPanel mainPanel;
+    
+    private static ConnectScreen connectScreen = new ConnectScreen(8);
     
     private TextArea feed;
     
@@ -133,11 +136,15 @@ public class Client extends Frame {
                     handler = new ClientSideServerHandler(serverField.getText(),
                             Integer.parseInt(portField.getText()));
                 }
-                handler.sendMessage(nameField.getText());
-                handler.setName(nameField.getText());
+                if (handler.sendCommand(1)) {
+                    handler.setName(nameField.getText());
+                    handler.sendMessage(nameField.getText());
+                    handler.sendCommand(1);
+                    handler.commandListener();
+                }
+                
                 this.remove(mainPanel);
-                ConnectScreen connectStatusPanel = new ConnectScreen(8);
-                mainPanel = connectStatusPanel.getPanel();
+                mainPanel = connectScreen.getPanel();
                 //mainPanel = sendMessagePanel();
                 this.add(mainPanel, BorderLayout.CENTER);
                 //this.add(getGamePanel(), BorderLayout.EAST);
@@ -216,20 +223,23 @@ public class Client extends Frame {
         buyPanel.add(sellButton);
         
         buyButton.addActionListener(e -> {
-            sendGameCommand("Bought one unit!");
+            //sendGameCommand("Bought one unit!");
         });
         
         return buyPanel;
     }
     
-    private void sendGameCommand(String str) {
-        handler.sendMessage(str);
-        feed.append(str + "\n");
-    }
-    
     private void sendMessage() {
         handler.sendMessage(messageField.getText());
         messageField.setText("");
+    }
+    
+    public static void updatePlayerConnect(int index, String player) {
+        connectScreen.updatePlayerLabel(index, player);
+    }
+    
+    public static void updatePlayerStatus(int index, boolean ready) {
+        connectScreen.updatePlayerStatus(index, ready);
     }
 
 }

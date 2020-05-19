@@ -8,6 +8,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import station.server.UnknownCommandException;
 
 /**
  * A client side class to handle connection to a server.
@@ -91,6 +92,55 @@ public class ClientSideServerHandler {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     running = false;
+                }
+            }
+        }).start();
+    }
+    
+    /**
+     * Calls the server to see if a command can be run.
+     * 1 is to give the server the name of a connecting client. If the server will listen to the
+     * connection a 2 is returned.
+     * 
+     * @param command Int of the client side command.
+     * @return If the server reads the command.
+     */
+    public boolean sendCommand(int command) {
+        try {
+            toServer.writeInt(command);
+            return true;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+    
+    public void commandListener() {
+        new Thread(() -> {
+            boolean running = true;
+            while (running) {
+                try {
+                    switch (fromServer.readInt()) {
+                        case 2:
+                            int pos = fromServer.readInt();
+                            String name = fromServer.readUTF();
+                            System.out.println("Updating pos " + pos + " with name " + name);
+                            Client.updatePlayerConnect(pos, name);
+                            break;
+                        case 4:
+                            Client.updatePlayerStatus(fromServer.readInt(),
+                                    fromServer.readBoolean());
+                            break;
+                        case 999:
+                            break;
+                        default:
+                            throw new UnknownCommandException("error");
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    running = false;
+                } catch (UnknownCommandException cex) {
+                    cex.printStackTrace();
                 }
             }
         }).start();

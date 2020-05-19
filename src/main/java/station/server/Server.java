@@ -69,11 +69,16 @@ public class Server extends Frame {
                                             player.getOutputStream());
                                     
                                     clients.add(client);
+                                    if(client.getCommand() != 1) {
+                                        return;
+                                    }
                                     String name = client.getNameFromClient();
                                     appendLog(name + " connected.");
-                                    sendMessage(name + " connected.");
+                                    //sendMessage(name + " connected.");
                                     
-                                    messageListener(client);
+                                    //messageListener(client);
+                                    commandListener(client);
+                                    
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
                                 }
@@ -107,7 +112,50 @@ public class Server extends Frame {
         });
     }
     
-    private void messageListener(HandleClient client) {
+    private void commandListener(HandleClient client) {
+        new Thread(() -> {
+            boolean running = true;
+            while (running) {
+                try {
+                    switch (client.getCommand()) {
+                        case 1:
+                            System.out.println("Recieved name!");
+                            for(int i = 0; i < clients.size(); i++) {
+                                for(int j = 0; j < clients.size(); j++) {
+                                    System.out.println("Sending " + clients.get(j).getName() + " to client " + i);
+                                    clients.get(i).sendCommand(2);
+                                    clients.get(i).sendConnect(j, clients.get(j).getName());
+                                }
+                            }
+                            break;
+                        case 3:
+                            boolean send = client.getStatus();
+                            int index = 0;
+                            for(int i = 0; i < clients.size(); i++) {
+                                if(clients.get(i).equals(client)) {
+                                    index = i;
+                                }
+                            }
+                            for(int i = 0; i < clients.size(); i++) {
+                                clients.get(i).sendCommand(4);
+                                clients.get(i).sendStatus(index, send);
+                            }
+                            break;
+                        default:
+                            throw new UnknownCommandException("ocmmand");
+                    }
+                        
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    running = false;
+                } catch (UnknownCommandException commandEx) {
+                    commandEx.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    
+    /*private void messageListener(HandleClient client) {
         new Thread(() -> {
             boolean running = true;
             while (running) {
@@ -129,13 +177,13 @@ public class Server extends Frame {
                 }
             }
         }).start();
-    }
+    }*/
     
-    private void sendMessage(String str) {
+    /*private void sendMessage(String str) {
         for (int i = 0; i < clients.size(); i++) {
             clients.get(i).sendMessage(str + "\n");
         }
-    }
+    }*/
     
     private void appendLog(String msg) {
         log.append("[" + new Date() + "] " + msg + "\n");
