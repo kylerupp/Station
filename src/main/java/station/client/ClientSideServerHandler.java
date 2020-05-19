@@ -115,6 +115,17 @@ public class ClientSideServerHandler {
         }
     }
     
+    /**
+     * Used to listen for commands. Once called a thread is created to listen for commands which
+     * will then enact a response for the command once called. If no command can be called it will
+     * throw an unknown command error and print to log. Otherwise if IOException occurs the loop
+     * will exit. Commands are as follows. Commands coming in from the server should only be even
+     * numbers.
+     * 
+     * <p>0-10 reserved for lobby connection</p>
+     * <p>2. new player connected</p>
+     * <p>4. player updated ready status</p>
+     */
     public void commandListener() {
         new Thread(() -> {
             boolean running = true;

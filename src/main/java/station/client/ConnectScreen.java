@@ -26,6 +26,12 @@ public class ConnectScreen {
     
     private int size;
     
+    /**
+     * Constructor for the connect screen. This will initialize all of the necessary connection info
+     * that will be updated as the server runs.
+     * 
+     * @param size of the maximum lobby connection.
+     */
     public ConnectScreen(int size) {
         panel = new JPanel();
         
@@ -35,15 +41,15 @@ public class ConnectScreen {
         playerLabels = new ArrayList<JLabel>();
         playerReadyStatus = new ArrayList<JCheckBox>();
         
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             JCheckBox check = new JCheckBox();
             check.setEnabled(false);
             JLabel label = new JLabel("Unconnected");
             playerLabels.add(label);
             playerReadyStatus.add(check);
             
-            panel.add(label);
-            panel.add(check);
+            infoPanel.add(label);
+            infoPanel.add(check);
         }
         
         JButton readyButton = new JButton("Ready");
@@ -53,6 +59,14 @@ public class ConnectScreen {
         panel.add(infoPanel, BorderLayout.CENTER);
     }
     
+    /**
+     * Updates the label of a player that is connected.
+     * 
+     * @param index Of the player connecting.
+     * @param str Name of the player.
+     * 
+     * @return True if the label can be updated. 
+     */
     public boolean updatePlayerLabel(int index, String str) {
         if (index > size || index < 0) {
             return false;
@@ -63,8 +77,17 @@ public class ConnectScreen {
         return true;
     }
     
+    /**
+     * This method updates the player status on the screen. A check will be formed if the player is
+     * ready.
+     * 
+     * @param index Index of the player readiness.
+     * @param check If the selected player is ready.
+     * 
+     * @return true if the player can be updated.
+     */
     public boolean updatePlayerStatus(int index, boolean check) {
-        if(index > size || index < 0) {
+        if (index > size || index < 0) {
             return false;
         }
         JCheckBox status = (JCheckBox) playerReadyStatus.get(index);

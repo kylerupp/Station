@@ -69,7 +69,7 @@ public class Server extends Frame {
                                             player.getOutputStream());
                                     
                                     clients.add(client);
-                                    if(client.getCommand() != 1) {
+                                    if (client.getCommand() != 1) {
                                         return;
                                     }
                                     String name = client.getNameFromClient();
@@ -120,9 +120,10 @@ public class Server extends Frame {
                     switch (client.getCommand()) {
                         case 1:
                             System.out.println("Recieved name!");
-                            for(int i = 0; i < clients.size(); i++) {
-                                for(int j = 0; j < clients.size(); j++) {
-                                    System.out.println("Sending " + clients.get(j).getName() + " to client " + i);
+                            for (int i = 0; i < clients.size(); i++) {
+                                for (int j = 0; j < clients.size(); j++) {
+                                    System.out.println("Sending " + clients.get(j).getName() 
+                                            + " to client " + i);
                                     clients.get(i).sendCommand(2);
                                     clients.get(i).sendConnect(j, clients.get(j).getName());
                                 }
@@ -131,12 +132,12 @@ public class Server extends Frame {
                         case 3:
                             boolean send = client.getStatus();
                             int index = 0;
-                            for(int i = 0; i < clients.size(); i++) {
-                                if(clients.get(i).equals(client)) {
+                            for (int i = 0; i < clients.size(); i++) {
+                                if (clients.get(i).equals(client)) {
                                     index = i;
                                 }
                             }
-                            for(int i = 0; i < clients.size(); i++) {
+                            for (int i = 0; i < clients.size(); i++) {
                                 clients.get(i).sendCommand(4);
                                 clients.get(i).sendStatus(index, send);
                             }
