@@ -28,7 +28,7 @@ public class Server extends Frame {
     private TextArea log;
     private ServerSocket socket;
     
-    private List<HandleClient> clients = new ArrayList<>();
+    private ClientList clients = new ClientList(8);
     
     /**
      * This method starts the server client. Method shows window and handles server sockets.
@@ -68,7 +68,9 @@ public class Server extends Frame {
                                     HandleClient client = new HandleClient(player.getInputStream(), 
                                             player.getOutputStream());
                                     
-                                    clients.add(client);
+                                    if(!clients.add(client)){
+                                        throw new IOException();
+                                    }
                                     if (client.getCommand() != 1) {
                                         return;
                                     }
@@ -118,14 +120,23 @@ public class Server extends Frame {
             while (running) {
                 try {
                     switch (client.getCommand()) {
+                        case 0:
+                            for(int i = 0; i < clients.size(); i++) {
+                                if(clients.get(i).getClient() != null) {
+                                    if (clients.get(i).getClient().equals(client)) {
+                                        System.out.println("Sending position " + i + " to " + client.getName());
+                                        client.sendIndex(i);
+                                    }
+                                }
+                            }
                         case 1:
                             System.out.println("Recieved name!");
                             for (int i = 0; i < clients.size(); i++) {
                                 for (int j = 0; j < clients.size(); j++) {
                                     System.out.println("Sending " + clients.get(j).getName() 
                                             + " to client " + i);
-                                    clients.get(i).sendCommand(2);
-                                    clients.get(i).sendConnect(j, clients.get(j).getName());
+                                    clients.get(i).getClient().sendCommand(2);
+                                    clients.get(i).getClient().sendConnect(j, clients.get(j).getName());
                                 }
                             }
                             break;
@@ -138,9 +149,13 @@ public class Server extends Frame {
                                 }
                             }
                             for (int i = 0; i < clients.size(); i++) {
-                                clients.get(i).sendCommand(4);
-                                clients.get(i).sendStatus(index, send);
+                                clients.get(i).getClient().sendCommand(4);
+                                clients.get(i).getClient().sendStatus(index, send);
                             }
+                            break;
+                        case 999:
+                            //int disconnect = client.getIndex();
+                            clients.remove(client.getIndex());
                             break;
                         default:
                             throw new UnknownCommandException("ocmmand");

@@ -18,13 +18,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.net.ConnectException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import station.server.UnknownCommandException;
 
 public class Client extends Frame {
     
@@ -54,9 +54,17 @@ public class Client extends Frame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                dispose();
-                if (handler != null) {
-                    handler.close();
+                try {
+                    dispose();
+                    if (handler != null) {
+                        if (handler.getConnectedPos() != -1) {
+                            handler.sendCommand(999);
+                            handler.sendIndex(handler.getConnectedPos());
+                        }
+                        handler.close();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
@@ -139,7 +147,7 @@ public class Client extends Frame {
                 if (handler.sendCommand(1)) {
                     handler.setName(nameField.getText());
                     handler.sendMessage(nameField.getText());
-                    handler.sendCommand(1);
+                    handler.sendCommand(0);
                     handler.commandListener();
                 }
                 

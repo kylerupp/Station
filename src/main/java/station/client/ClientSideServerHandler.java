@@ -22,6 +22,8 @@ public class ClientSideServerHandler {
     DataInputStream fromServer;
     DataOutputStream toServer;
     
+    private int connectedPos = -1;
+    
     private String name;
     
     /**
@@ -132,6 +134,8 @@ public class ClientSideServerHandler {
             while (running) {
                 try {
                     switch (fromServer.readInt()) {
+                        case 0:
+                            connectedPos = fromServer.readInt();
                         case 2:
                             int pos = fromServer.readInt();
                             String name = fromServer.readUTF();
@@ -163,6 +167,14 @@ public class ClientSideServerHandler {
     
     public String getName() {
         return name;
+    }
+    
+    public int getConnectedPos() {
+        return connectedPos;
+    }
+    
+    public void sendIndex(int index) throws IOException {
+        toServer.writeInt(index);
     }
 
 }
