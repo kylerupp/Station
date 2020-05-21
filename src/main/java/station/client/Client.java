@@ -32,7 +32,7 @@ public class Client extends Frame {
     private final JTextField nameField = new JTextField();
     private JPanel mainPanel;
     
-    private static ConnectScreen connectScreen = new ConnectScreen(8);
+    private static ConnectScreen connectScreen = new ConnectScreen(2);
     
     private TextArea feed;
     

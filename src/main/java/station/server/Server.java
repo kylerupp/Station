@@ -28,7 +28,7 @@ public class Server extends Frame {
     private TextArea log;
     private ServerSocket socket;
     
-    private ClientList clients = new ClientList(8);
+    private ClientList clients = new ClientList(2);
     
     /**
      * This method starts the server client. Method shows window and handles server sockets.

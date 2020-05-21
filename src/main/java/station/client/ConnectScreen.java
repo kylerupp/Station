@@ -36,7 +36,7 @@ public class ConnectScreen {
         panel = new JPanel();
         
         this.size = size;
-        JPanel infoPanel = new JPanel(new GridLayout(4, 4));
+        JPanel infoPanel = new JPanel(new GridLayout(2, 2));
         
         playerLabels = new ArrayList<JLabel>();
         playerReadyStatus = new ArrayList<JCheckBox>();
