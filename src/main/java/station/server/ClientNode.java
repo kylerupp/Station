@@ -13,12 +13,23 @@ public class ClientNode {
     private int index;
     private boolean connected;
     
+    /**
+     * Creates a node to store the information for a client. Index and client i/o should be given.
+     * It defaults the connection to null.
+     * 
+     * @param index Index of the connection. This is used for the parent's list.
+     * @param client Client connection.
+     */
     public ClientNode(int index, HandleClient client) {
         this.client = client;
         this.index = index;
         connected = false;
     }
     
+    /**
+     * Returns the client's name.
+     * @return The name.
+     */
     public String getName() {
         if (client != null) {
             return client.getName();

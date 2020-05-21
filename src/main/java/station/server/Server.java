@@ -68,7 +68,7 @@ public class Server extends Frame {
                                     HandleClient client = new HandleClient(player.getInputStream(), 
                                             player.getOutputStream());
                                     
-                                    if(!clients.add(client)){
+                                    if (!clients.add(client)) {
                                         throw new IOException();
                                     }
                                     if (client.getCommand() != 1) {
@@ -121,22 +121,29 @@ public class Server extends Frame {
                 try {
                     switch (client.getCommand()) {
                         case 0:
-                            for(int i = 0; i < clients.size(); i++) {
-                                if(clients.get(i).getClient() != null) {
+                            System.out.println("New client connected");
+                            for (int i = 0; i < clients.size(); i++) {
+                                if (clients.get(i).getClient() != null) {
                                     if (clients.get(i).getClient().equals(client)) {
-                                        System.out.println("Sending position " + i + " to " + client.getName());
+                                        System.out.println("Sending position " + i
+                                                + " to " + client.getName());
+                                        client.sendCommand(0);
                                         client.sendIndex(i);
                                     }
                                 }
                             }
+                            break;
                         case 1:
                             System.out.println("Recieved name!");
                             for (int i = 0; i < clients.size(); i++) {
-                                for (int j = 0; j < clients.size(); j++) {
-                                    System.out.println("Sending " + clients.get(j).getName() 
-                                            + " to client " + i);
-                                    clients.get(i).getClient().sendCommand(2);
-                                    clients.get(i).getClient().sendConnect(j, clients.get(j).getName());
+                                if (clients.get(i).isConnected()) {
+                                    for (int j = 0; j < clients.size(); j++) {
+                                        System.out.println("Sending " + clients.get(j).getName() 
+                                                + " to client " + i);
+                                        clients.get(i).getClient().sendCommand(2);
+                                        clients.get(i).getClient()
+                                                .sendConnect(j, clients.get(j).getName());
+                                    }
                                 }
                             }
                             break;
@@ -144,7 +151,7 @@ public class Server extends Frame {
                             boolean send = client.getStatus();
                             int index = 0;
                             for (int i = 0; i < clients.size(); i++) {
-                                if (clients.get(i).equals(client)) {
+                                if (clients.get(i).getClient().equals(client)) {
                                     index = i;
                                 }
                             }
@@ -155,7 +162,23 @@ public class Server extends Frame {
                             break;
                         case 999:
                             //int disconnect = client.getIndex();
-                            clients.remove(client.getIndex());
+                            System.out.println("Recieved close command.");
+                            int toRemove = client.getIndex();
+                            appendLog(clients.get(toRemove).getClient().getName()
+                                    + " disconnected.");
+                            clients.remove(toRemove);
+                            System.out.println("updating names");
+                            for (int i = 0; i < clients.size(); i++) {
+                                if (clients.get(i).isConnected()) {
+                                    for (int j = 0; j < clients.size(); j++) {
+                                        System.out.println("Sending " + clients.get(j).getName() 
+                                                + " to client " + i);
+                                        clients.get(i).getClient().sendCommand(2);
+                                        clients.get(i).getClient()
+                                                .sendConnect(j, clients.get(j).getName());
+                                    }
+                                }
+                            }
                             break;
                         default:
                             throw new UnknownCommandException("ocmmand");

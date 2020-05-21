@@ -102,6 +102,9 @@ public class HandleClient {
         toClient.writeInt(index);
     }
 
+    /**
+     * Closes the connection properly.
+     */
     public void close() {
         try {
             toClient.close();
@@ -111,7 +114,8 @@ public class HandleClient {
         } finally {
             if (toClient != null) {
                 toClient = null;
-            }if (fromClient != null) {
+            } 
+            if (fromClient != null) {
                 fromClient = null;
             }
         }

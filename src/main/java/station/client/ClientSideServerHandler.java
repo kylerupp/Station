@@ -136,6 +136,9 @@ public class ClientSideServerHandler {
                     switch (fromServer.readInt()) {
                         case 0:
                             connectedPos = fromServer.readInt();
+                            System.out.println("My position is " + connectedPos);
+                            toServer.writeInt(1);
+                            break;
                         case 2:
                             int pos = fromServer.readInt();
                             String name = fromServer.readUTF();
@@ -151,6 +154,9 @@ public class ClientSideServerHandler {
                         default:
                             throw new UnknownCommandException("error");
                     }
+                } catch (SocketException close) { 
+                    System.out.println("Closing.");
+                    running = false;
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     running = false;

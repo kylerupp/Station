@@ -56,8 +56,10 @@ public class Client extends Frame {
             public void windowClosing(WindowEvent e) {
                 try {
                     dispose();
+                    System.out.println("Trying to send close command to server.");
                     if (handler != null) {
                         if (handler.getConnectedPos() != -1) {
+                            System.out.println("Sending close command");
                             handler.sendCommand(999);
                             handler.sendIndex(handler.getConnectedPos());
                         }
