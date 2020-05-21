@@ -10,6 +10,7 @@ package station.client;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
@@ -19,12 +20,15 @@ import javax.swing.JPanel;
 
 public class ConnectScreen {
     
+    private ClientSideServerHandler handler;
+    
     private JPanel panel;
     
     private List playerLabels;
     private List playerReadyStatus;
     
     private int size;
+    private boolean ready = false;
     
     /**
      * Constructor for the connect screen. This will initialize all of the necessary connection info
@@ -32,7 +36,9 @@ public class ConnectScreen {
      * 
      * @param size of the maximum lobby connection.
      */
-    public ConnectScreen(int size) {
+    public ConnectScreen(int size, ClientSideServerHandler client) {
+        this.handler = client;
+        
         panel = new JPanel();
         
         this.size = size;
@@ -54,6 +60,16 @@ public class ConnectScreen {
         
         JButton readyButton = new JButton("Ready");
         readyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        readyButton.addActionListener(e -> {
+            ready = !ready;
+            try {
+                handler.sendCommand(3);
+                handler.sendStatus(ready);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
         
         panel.add(readyButton, BorderLayout.NORTH);
         panel.add(infoPanel, BorderLayout.CENTER);
@@ -94,6 +110,10 @@ public class ConnectScreen {
         status.setSelected(check);
         
         return true;
+    }
+    
+    public boolean isReady() {
+        return ready;
     }
     
     public JPanel getPanel() {

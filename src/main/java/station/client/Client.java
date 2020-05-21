@@ -32,7 +32,7 @@ public class Client extends Frame {
     private final JTextField nameField = new JTextField();
     private JPanel mainPanel;
     
-    private static ConnectScreen connectScreen = new ConnectScreen(2);
+    private static ConnectScreen connectScreen;
     
     private TextArea feed;
     
@@ -154,6 +154,9 @@ public class Client extends Frame {
                 }
                 
                 this.remove(mainPanel);
+                
+                connectScreen = new ConnectScreen(2, handler);
+                
                 mainPanel = connectScreen.getPanel();
                 //mainPanel = sendMessagePanel();
                 this.add(mainPanel, BorderLayout.CENTER);

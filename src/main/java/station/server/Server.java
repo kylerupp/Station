@@ -151,8 +151,10 @@ public class Server extends Frame {
                             boolean send = client.getStatus();
                             int index = 0;
                             for (int i = 0; i < clients.size(); i++) {
-                                if (clients.get(i).getClient().equals(client)) {
-                                    index = i;
+                                if (clients.get(i).isConnected()) {
+                                    if (clients.get(i).getClient().equals(client)) {
+                                        index = i;
+                                    }
                                 }
                             }
                             for (int i = 0; i < clients.size(); i++) {

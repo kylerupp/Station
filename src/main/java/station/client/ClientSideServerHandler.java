@@ -182,5 +182,9 @@ public class ClientSideServerHandler {
     public void sendIndex(int index) throws IOException {
         toServer.writeInt(index);
     }
+    
+    public void sendStatus(boolean ready) throws IOException {
+        toServer.writeBoolean(ready);
+    }
 
 }
