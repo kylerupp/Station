@@ -146,6 +146,9 @@ public class Client extends Frame {
                     handler = new ClientSideServerHandler(serverField.getText(),
                             Integer.parseInt(portField.getText()));
                 }
+                
+                connectScreen = new ConnectScreen(2, handler);
+                
                 if (handler.sendCommand(1)) {
                     handler.setName(nameField.getText());
                     handler.sendMessage(nameField.getText());
@@ -154,8 +157,6 @@ public class Client extends Frame {
                 }
                 
                 this.remove(mainPanel);
-                
-                connectScreen = new ConnectScreen(2, handler);
                 
                 mainPanel = connectScreen.getPanel();
                 //mainPanel = sendMessagePanel();
