@@ -119,7 +119,8 @@ public class Server extends Frame {
             boolean running = true;
             while (running) {
                 try {
-                    switch (client.getCommand()) {
+                    int command = client.getCommand();
+                    switch (command) {
                         case 0:
                             System.out.println("New client connected");
                             for (int i = 0; i < clients.size(); i++) {
@@ -148,6 +149,7 @@ public class Server extends Frame {
                             }
                             break;
                         case 3:
+                            System.out.println("Updating players status");
                             boolean send = client.getStatus();
                             int index = 0;
                             for (int i = 0; i < clients.size(); i++) {
@@ -157,14 +159,19 @@ public class Server extends Frame {
                                     }
                                 }
                             }
-                            if(send) {
+                            System.out.println("Client " + clients.get(index).getName() 
+                                    + " is ready " + send);
+                            if (send) {
                                 appendLog(clients.get(index).getClient().getName() + " is ready.");
                             } else {
-                                appendLog(clients.get(index).getClient().getName() + " is unready.");
+                                appendLog(clients.get(index).getClient().getName() 
+                                        + " is unready.");
                             }
                             for (int i = 0; i < clients.size(); i++) {
-                                clients.get(i).getClient().sendCommand(4);
-                                clients.get(i).getClient().sendStatus(index, send);
+                                if (clients.get(i).isConnected()) {
+                                    clients.get(i).getClient().sendCommand(4);
+                                    clients.get(i).getClient().sendStatus(index, send);
+                                }
                             }
                             break;
                         case 999:
@@ -188,7 +195,7 @@ public class Server extends Frame {
                             }
                             break;
                         default:
-                            throw new UnknownCommandException("ocmmand");
+                            throw new UnknownCommandException("Server recived " + command);
                     }
                         
                 } catch (IOException ex) {

@@ -61,6 +61,7 @@ public class Client extends Frame {
                         if (handler.getConnectedPos() != -1) {
                             System.out.println("Sending close command");
                             handler.sendCommand(3);
+                            handler.sendStatus(false);
                             updatePlayerStatus(handler.getConnectedPos(), false);
                             
                             handler.sendCommand(999);
@@ -138,8 +139,8 @@ public class Client extends Frame {
         //listener for connect button
         button.addActionListener(e -> {
             try {
-                if (serverField.getText().isBlank()) {
-                    if (portField.getText().isBlank()) {
+                if (serverField.getText().isEmpty()) {
+                    if (portField.getText().isEmpty()) {
                         handler = new ClientSideServerHandler("localHost", 8000);
                     } else {
                         handler = new ClientSideServerHandler("localHost",
