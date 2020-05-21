@@ -157,6 +157,11 @@ public class Server extends Frame {
                                     }
                                 }
                             }
+                            if(send) {
+                                appendLog(clients.get(index).getClient().getName() + " is ready.");
+                            } else {
+                                appendLog(clients.get(index).getClient().getName() + " is unready.");
+                            }
                             for (int i = 0; i < clients.size(); i++) {
                                 clients.get(i).getClient().sendCommand(4);
                                 clients.get(i).getClient().sendStatus(index, send);

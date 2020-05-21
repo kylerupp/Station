@@ -60,6 +60,9 @@ public class Client extends Frame {
                     if (handler != null) {
                         if (handler.getConnectedPos() != -1) {
                             System.out.println("Sending close command");
+                            handler.sendCommand(3);
+                            updatePlayerStatus(handler.getConnectedPos(), false);
+                            
                             handler.sendCommand(999);
                             handler.sendIndex(handler.getConnectedPos());
                         }
