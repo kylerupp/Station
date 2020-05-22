@@ -70,9 +70,9 @@ public class ClientList {
      */
     public void remove(int index) {
         ClientNode oldClient = (ClientNode) clients.get(index);
+        oldClient.setConnected(false);
         oldClient.getClient().close();
         oldClient.setClient(null);
-        oldClient.setConnected(false);
     }
     
     public ClientNode get(int index) {

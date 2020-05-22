@@ -28,7 +28,7 @@ public class Server extends Frame {
     private TextArea log;
     private ServerSocket socket;
     
-    private ClientList clients = new ClientList(2);
+    private ClientList clients = new ClientList(8);
     
     /**
      * This method starts the server client. Method shows window and handles server sockets.
@@ -167,32 +167,24 @@ public class Server extends Frame {
                                 appendLog(clients.get(index).getClient().getName() 
                                         + " is unready.");
                             }
-                            for (int i = 0; i < clients.size(); i++) {
-                                if (clients.get(i).isConnected()) {
-                                    clients.get(i).getClient().sendCommand(4);
-                                    clients.get(i).getClient().sendStatus(index, send);
+                            int tracker = 0;
+                            try {
+                                for (int i = 0; i < clients.size(); i++) {
+                                    tracker = i;
+                                    if (clients.get(i).isConnected()) {
+                                        System.out.println(clients.get(i).getClient().getName() 
+                                                + " is connected.");
+                                        clients.get(i).getClient().sendCommand(4);
+                                        clients.get(i).getClient().sendStatus(index, send);
+                                    }
                                 }
+                            } catch (SocketException userDisconnect) {
+                                userDisconnect.printStackTrace();
+                                disconnectUser(tracker);
                             }
                             break;
                         case 999:
-                            //int disconnect = client.getIndex();
-                            System.out.println("Recieved close command.");
-                            int toRemove = client.getIndex();
-                            appendLog(clients.get(toRemove).getClient().getName()
-                                    + " disconnected.");
-                            clients.remove(toRemove);
-                            System.out.println("updating names");
-                            for (int i = 0; i < clients.size(); i++) {
-                                if (clients.get(i).isConnected()) {
-                                    for (int j = 0; j < clients.size(); j++) {
-                                        System.out.println("Sending " + clients.get(j).getName() 
-                                                + " to client " + i);
-                                        clients.get(i).getClient().sendCommand(2);
-                                        clients.get(i).getClient()
-                                                .sendConnect(j, clients.get(j).getName());
-                                    }
-                                }
-                            }
+                            disconnectUser(client.getIndex());
                             break;
                         default:
                             throw new UnknownCommandException("Server recived " + command);
@@ -206,6 +198,26 @@ public class Server extends Frame {
                 }
             }
         }).start();
+    }
+    
+    private void disconnectUser(int index) {
+        try {
+            appendLog(clients.get(index).getClient().getName() + " disconnected.");
+            clients.remove(index);
+            System.out.println("updating names");
+            for (int i = 0; i < clients.size(); i++) {
+                if (clients.get(i).isConnected()) {
+                    for (int j = 0; j < clients.size(); j++) {
+                        System.out.println("Sending " + clients.get(j).getName() 
+                                + " to client " + i);
+                        clients.get(i).getClient().sendCommand(2);
+                        clients.get(i).getClient().sendConnect(j, clients.get(j).getName());
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     /*private void messageListener(HandleClient client) {

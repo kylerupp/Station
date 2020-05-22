@@ -151,7 +151,7 @@ public class Client extends Frame {
                             Integer.parseInt(portField.getText()));
                 }
                 
-                connectScreen = new ConnectScreen(2, handler);
+                connectScreen = new ConnectScreen(8, handler);
                 
                 if (handler.sendCommand(1)) {
                     handler.setName(nameField.getText());
