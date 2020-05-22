@@ -9,6 +9,7 @@
 package station.client;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -17,7 +18,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.net.ConnectException;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,6 +32,8 @@ public class Client extends Frame {
     private final JTextField nameField = new JTextField();
     private JPanel mainPanel;
     
+    private static ConnectScreen connectScreen;
+    
     private TextArea feed;
     
     private ClientSideServerHandler handler;
@@ -37,7 +42,7 @@ public class Client extends Frame {
      * This method starts the client window. Sets appropriate sizes and variables and shows window.
      */
     public void start() {
-        this.setSize(new Dimension(460, 300));
+        this.setSize(new Dimension(500, 300));
         this.setResizable(false);
         
         mainPanel = connectPanel();
@@ -49,9 +54,23 @@ public class Client extends Frame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                dispose();
-                if (handler != null) {
-                    handler.close();
+                try {
+                    dispose();
+                    System.out.println("Trying to send close command to server.");
+                    if (handler != null) {
+                        if (handler.getConnectedPos() != -1) {
+                            System.out.println("Sending close command");
+                            handler.sendCommand(3);
+                            handler.sendStatus(false);
+                            updatePlayerStatus(handler.getConnectedPos(), false);
+                            
+                            handler.sendCommand(999);
+                            handler.sendIndex(handler.getConnectedPos());
+                        }
+                        handler.close();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
@@ -120,8 +139,8 @@ public class Client extends Frame {
         //listener for connect button
         button.addActionListener(e -> {
             try {
-                if (serverField.getText().isBlank()) {
-                    if (portField.getText().isBlank()) {
+                if (serverField.getText().isEmpty()) {
+                    if (portField.getText().isEmpty()) {
                         handler = new ClientSideServerHandler("localHost", 8000);
                     } else {
                         handler = new ClientSideServerHandler("localHost",
@@ -131,11 +150,22 @@ public class Client extends Frame {
                     handler = new ClientSideServerHandler(serverField.getText(),
                             Integer.parseInt(portField.getText()));
                 }
-                handler.sendMessage(nameField.getText());
-                handler.setName(nameField.getText());
+                
+                connectScreen = new ConnectScreen(8, handler);
+                
+                if (handler.sendCommand(1)) {
+                    handler.setName(nameField.getText());
+                    handler.sendMessage(nameField.getText());
+                    handler.sendCommand(0);
+                    handler.commandListener();
+                }
+                
                 this.remove(mainPanel);
-                mainPanel = sendMessagePanel();
-                this.add(mainPanel);
+                
+                mainPanel = connectScreen.getPanel();
+                //mainPanel = sendMessagePanel();
+                this.add(mainPanel, BorderLayout.CENTER);
+                //this.add(getGamePanel(), BorderLayout.EAST);
                 this.revalidate();
             } catch (ConnectException conex) {
                 //todo create dialoug
@@ -189,6 +219,8 @@ public class Client extends Frame {
         feed = new TextArea();
         feed.setEditable(false);
         feed.setPreferredSize(new Dimension(400, 200));
+        //feed.setMinimumSize(new Dimension(400, 200));
+        feed.setSize(new Dimension(400, 200));
         
         JPanel chat = new JPanel();
         chat.add(feed);
@@ -197,9 +229,35 @@ public class Client extends Frame {
         return chat;
     }
     
+    private JPanel getGamePanel() {
+        JPanel buyPanel = new JPanel();
+        buyPanel.setLayout(new BoxLayout(buyPanel, BoxLayout.Y_AXIS));
+        
+        JButton buyButton = new JButton("Buy");
+        JButton sellButton = new JButton("Sell");
+        buyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sellButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buyPanel.add(buyButton);
+        buyPanel.add(sellButton);
+        
+        buyButton.addActionListener(e -> {
+            //sendGameCommand("Bought one unit!");
+        });
+        
+        return buyPanel;
+    }
+    
     private void sendMessage() {
         handler.sendMessage(messageField.getText());
         messageField.setText("");
+    }
+    
+    public static void updatePlayerConnect(int index, String player) {
+        connectScreen.updatePlayerLabel(index, player);
+    }
+    
+    public static void updatePlayerStatus(int index, boolean ready) {
+        connectScreen.updatePlayerStatus(index, ready);
     }
 
 }

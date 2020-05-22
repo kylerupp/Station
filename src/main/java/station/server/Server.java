@@ -28,7 +28,7 @@ public class Server extends Frame {
     private TextArea log;
     private ServerSocket socket;
     
-    private List<HandleClient> clients = new ArrayList<>();
+    private ClientList clients = new ClientList(8);
     
     /**
      * This method starts the server client. Method shows window and handles server sockets.
@@ -68,12 +68,19 @@ public class Server extends Frame {
                                     HandleClient client = new HandleClient(player.getInputStream(), 
                                             player.getOutputStream());
                                     
-                                    clients.add(client);
+                                    if (!clients.add(client)) {
+                                        throw new IOException();
+                                    }
+                                    if (client.getCommand() != 1) {
+                                        return;
+                                    }
                                     String name = client.getNameFromClient();
                                     appendLog(name + " connected.");
-                                    sendMessage(name + " connected.");
+                                    //sendMessage(name + " connected.");
                                     
-                                    messageListener(client);
+                                    //messageListener(client);
+                                    commandListener(client);
+                                    
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
                                 }
@@ -107,7 +114,113 @@ public class Server extends Frame {
         });
     }
     
-    private void messageListener(HandleClient client) {
+    private void commandListener(HandleClient client) {
+        new Thread(() -> {
+            boolean running = true;
+            while (running) {
+                try {
+                    int command = client.getCommand();
+                    switch (command) {
+                        case 0:
+                            System.out.println("New client connected");
+                            for (int i = 0; i < clients.size(); i++) {
+                                if (clients.get(i).getClient() != null) {
+                                    if (clients.get(i).getClient().equals(client)) {
+                                        System.out.println("Sending position " + i
+                                                + " to " + client.getName());
+                                        client.sendCommand(0);
+                                        client.sendIndex(i);
+                                    }
+                                }
+                            }
+                            break;
+                        case 1:
+                            System.out.println("Recieved name!");
+                            for (int i = 0; i < clients.size(); i++) {
+                                if (clients.get(i).isConnected()) {
+                                    for (int j = 0; j < clients.size(); j++) {
+                                        System.out.println("Sending " + clients.get(j).getName() 
+                                                + " to client " + i);
+                                        clients.get(i).getClient().sendCommand(2);
+                                        clients.get(i).getClient()
+                                                .sendConnect(j, clients.get(j).getName());
+                                    }
+                                }
+                            }
+                            break;
+                        case 3:
+                            System.out.println("Updating players status");
+                            boolean send = client.getStatus();
+                            int index = 0;
+                            for (int i = 0; i < clients.size(); i++) {
+                                if (clients.get(i).isConnected()) {
+                                    if (clients.get(i).getClient().equals(client)) {
+                                        index = i;
+                                    }
+                                }
+                            }
+                            System.out.println("Client " + clients.get(index).getName() 
+                                    + " is ready " + send);
+                            if (send) {
+                                appendLog(clients.get(index).getClient().getName() + " is ready.");
+                            } else {
+                                appendLog(clients.get(index).getClient().getName() 
+                                        + " is unready.");
+                            }
+                            int tracker = 0;
+                            try {
+                                for (int i = 0; i < clients.size(); i++) {
+                                    tracker = i;
+                                    if (clients.get(i).isConnected()) {
+                                        System.out.println(clients.get(i).getClient().getName() 
+                                                + " is connected.");
+                                        clients.get(i).getClient().sendCommand(4);
+                                        clients.get(i).getClient().sendStatus(index, send);
+                                    }
+                                }
+                            } catch (SocketException userDisconnect) {
+                                userDisconnect.printStackTrace();
+                                disconnectUser(tracker);
+                            }
+                            break;
+                        case 999:
+                            disconnectUser(client.getIndex());
+                            break;
+                        default:
+                            throw new UnknownCommandException("Server recived " + command);
+                    }
+                        
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    running = false;
+                } catch (UnknownCommandException commandEx) {
+                    commandEx.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    
+    private void disconnectUser(int index) {
+        try {
+            appendLog(clients.get(index).getClient().getName() + " disconnected.");
+            clients.remove(index);
+            System.out.println("updating names");
+            for (int i = 0; i < clients.size(); i++) {
+                if (clients.get(i).isConnected()) {
+                    for (int j = 0; j < clients.size(); j++) {
+                        System.out.println("Sending " + clients.get(j).getName() 
+                                + " to client " + i);
+                        clients.get(i).getClient().sendCommand(2);
+                        clients.get(i).getClient().sendConnect(j, clients.get(j).getName());
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    /*private void messageListener(HandleClient client) {
         new Thread(() -> {
             boolean running = true;
             while (running) {
@@ -129,13 +242,13 @@ public class Server extends Frame {
                 }
             }
         }).start();
-    }
+    }*/
     
-    private void sendMessage(String str) {
+    /*private void sendMessage(String str) {
         for (int i = 0; i < clients.size(); i++) {
             clients.get(i).sendMessage(str + "\n");
         }
-    }
+    }*/
     
     private void appendLog(String msg) {
         log.append("[" + new Date() + "] " + msg + "\n");

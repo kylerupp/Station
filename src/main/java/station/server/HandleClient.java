@@ -68,8 +68,56 @@ public class HandleClient {
         }
     }
     
+    public int getCommand() throws IOException {
+        return fromClient.readInt();
+    }
+    
+    public void sendCommand(int command) throws IOException  {
+        toClient.writeInt(command);
+    }
+    
     public String getName() {
         return clientName;
     }
+    
+    public boolean getStatus() throws IOException {
+        return fromClient.readBoolean();
+    }
+    
+    public int getIndex() throws IOException {
+        return fromClient.readInt();
+    }
+    
+    public void sendStatus(int index, boolean ready) throws IOException {
+        toClient.writeInt(index);
+        toClient.writeBoolean(ready);
+    }
+    
+    public void sendConnect(int index, String name) throws IOException {
+        toClient.writeInt(index);
+        toClient.writeUTF(name);
+    }
+    
+    public void sendIndex(int index) throws IOException {
+        toClient.writeInt(index);
+    }
 
+    /**
+     * Closes the connection properly.
+     */
+    public void close() {
+        try {
+            toClient.close();
+            fromClient.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (toClient != null) {
+                toClient = null;
+            } 
+            if (fromClient != null) {
+                fromClient = null;
+            }
+        }
+    }
 }
