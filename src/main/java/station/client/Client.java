@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import station.client.ui.ConnectScreen;
+import station.client.ui.MainMenu;
 
 public class Client extends Frame {
     
@@ -33,6 +34,7 @@ public class Client extends Frame {
     private final JTextField nameField = new JTextField();
     private JPanel mainPanel;
     
+    private MainMenu mainMenu = new MainMenu();
     private static ConnectScreen connectScreen;
     
     private TextArea feed;
@@ -46,7 +48,8 @@ public class Client extends Frame {
         this.setSize(new Dimension(500, 300));
         this.setResizable(false);
         
-        mainPanel = connectPanel();
+        mainPanel = mainMenu.getPanel();
+        //mainPanel = connectPanel();
         this.add(mainPanel);
         
         this.setTitle("Client");
@@ -263,6 +266,13 @@ public class Client extends Frame {
     
     public static void updateStatusLabel(String text) {
         connectScreen.updateStatusLabel(text);
+    }
+    
+    public static void changeScene(int scene) {
+        switch (scene) {
+            case 1:
+                break;
+        }
     }
 
 }
