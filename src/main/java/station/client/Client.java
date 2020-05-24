@@ -34,7 +34,7 @@ public class Client extends Frame {
     private final JTextField nameField = new JTextField();
     private JPanel mainPanel;
     
-    private MainMenu mainMenu = new MainMenu();
+    private MainMenu mainMenu = new MainMenu(this);
     private static ConnectScreen connectScreen;
     
     private TextArea feed;
@@ -47,6 +47,8 @@ public class Client extends Frame {
     public void start() {
         this.setSize(new Dimension(500, 300));
         this.setResizable(false);
+        
+        this.setLocationRelativeTo(null);
         
         mainPanel = mainMenu.getPanel();
         //mainPanel = connectPanel();
@@ -268,9 +270,13 @@ public class Client extends Frame {
         connectScreen.updateStatusLabel(text);
     }
     
-    public static void changeScene(int scene) {
+    public void changeScene(int scene) {
         switch (scene) {
             case 1:
+                this.remove(mainPanel);
+                mainPanel = connectPanel();
+                this.add(mainPanel);
+                this.revalidate();
                 break;
         }
     }
