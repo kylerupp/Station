@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import station.client.ui.ConnectScreen;
+import station.client.ui.GameMenu;
 import station.client.ui.MainMenu;
 
 public class Client extends Frame {
@@ -36,6 +37,7 @@ public class Client extends Frame {
     
     private MainMenu mainMenu = new MainMenu(this);
     private static ConnectScreen connectScreen;
+    private GameMenu game = new GameMenu(this);
     
     private TextArea feed;
     
@@ -147,14 +149,14 @@ public class Client extends Frame {
             try {
                 if (serverField.getText().isEmpty()) {
                     if (portField.getText().isEmpty()) {
-                        handler = new ClientSideServerHandler("localHost", 8000);
+                        handler = new ClientSideServerHandler("localHost", 8000, this);
                     } else {
                         handler = new ClientSideServerHandler("localHost",
-                                Integer.parseInt(portField.getText()));
+                                Integer.parseInt(portField.getText()), this);
                     }
                 } else {
                     handler = new ClientSideServerHandler(serverField.getText(),
-                            Integer.parseInt(portField.getText()));
+                            Integer.parseInt(portField.getText()), this);
                 }
                 
                 connectScreen = new ConnectScreen(8, handler, nameField.getText());
@@ -278,7 +280,21 @@ public class Client extends Frame {
                 this.add(mainPanel);
                 this.revalidate();
                 break;
+            case 2:
+                this.remove(mainPanel);
+                mainPanel = game.getPanel();
+                this.add(mainPanel);
+                this.revalidate();
+                break;
         }
+    }
+    
+    public ClientSideServerHandler getHandler() {
+        return handler;
+    }
+    
+    public void endGame(String winner) {
+        game.endGame(winner);
     }
 
 }

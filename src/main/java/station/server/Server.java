@@ -189,6 +189,17 @@ public class Server extends Frame {
                                 disconnectUser(tracker);
                             }
                             break;
+                        case 13:
+                            int winner = client.getIndex();
+                            for(int i = 0; i < clients.size(); i++) {
+                                if(clients.get(i).isConnected()) {
+                                    clients.get(i).getClient().sendCommand(62);
+                                    clients.get(i).getClient()
+                                            .sendMessage(clients.get(winner).getName() 
+                                                    + " has won!");
+                                }
+                            }
+                            break;
                         case 999:
                             disconnectUser(client.getIndex());
                             break;
