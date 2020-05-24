@@ -344,11 +344,11 @@ public class Server extends Frame {
         return connectedCount;
     }
     
-    private void sendCountdown(int countdown) throws Exception {
+    private void sendCountdown(int countdown) throws IOException, InterruptedException {
+        appendLog("Starting game in " + countdown);
+        Thread.sleep(1000);
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).isConnected()) {    
-                appendLog("Starting game in " + countdown);
-                Thread.sleep(1000);
                 clients.get(i).getClient().sendCommand(6);
                 clients.get(i).getClient().sendIndex(countdown);
             } 

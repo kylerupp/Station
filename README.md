@@ -7,6 +7,7 @@
 	- Add basic game menu with singular win button.
 ### Fixes
 	- Center client window on startup.
+	- Countdown bug where countdown would multiply istelf by the amount of each player connected.
 
 ## Update 0.0.3
 
