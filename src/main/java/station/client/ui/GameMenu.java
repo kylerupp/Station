@@ -58,6 +58,11 @@ public class GameMenu {
     public void endGame(String winner) {
         action.setEnabled(false);
         status.setText(winner);
+        JButton lobby = new JButton("Lobby");
+        panel.add(lobby);
+        lobby.addActionListener(e -> {
+            client.changeScene(3);
+        });
     }
     
 }

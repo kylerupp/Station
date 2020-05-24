@@ -292,6 +292,13 @@ public class Client extends Frame {
                 this.add(mainPanel);
                 this.revalidate();
                 break;
+            case 3:
+                this.remove(mainPanel);
+                mainPanel = connectScreen.getPanel();
+                this.add(mainPanel);
+                //this.revalidate();
+                this.repaint();
+                break;
             default:
                 System.out.println("Error has occured.");
         }
