@@ -19,6 +19,7 @@ public class HandleClient {
     private DataInputStream fromClient;
     private DataOutputStream toClient;
     private String clientName;
+    private boolean playerStatus = false;
     
     /**
      * Constructor for server side client handler.
@@ -81,7 +82,8 @@ public class HandleClient {
     }
     
     public boolean getStatus() throws IOException {
-        return fromClient.readBoolean();
+        playerStatus = fromClient.readBoolean();
+        return playerStatus;
     }
     
     public int getIndex() throws IOException {
@@ -119,5 +121,9 @@ public class HandleClient {
                 fromClient = null;
             }
         }
+    }
+    
+    public boolean getPlayerStatus() {
+        return playerStatus;
     }
 }

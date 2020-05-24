@@ -51,9 +51,15 @@ public class Server extends Frame {
                 socket = new ServerSocket(8000);
                 appendLog("Server started at " + socket.getInetAddress().getHostAddress() 
                         + ":" + socket.getLocalPort());
+                
+                appendLog("Starting game loop...");
+                
+                startGameLoop();
+                
                 appendLog("Waiting for clients to join the session...");
                 
                 //listen for connections
+                
                 new Thread(() -> {
                     try {
                         //player connecction
@@ -252,6 +258,54 @@ public class Server extends Frame {
     
     private void appendLog(String msg) {
         log.append("[" + new Date() + "] " + msg + "\n");
+    }
+    
+    private void startGameLoop() {
+        new Thread(() -> {
+        
+            boolean running = true;
+            while(running) {
+                int connectedCount = 0;
+                int readyCount = 0;
+                for(int i = 0; i < clients.size(); i++) {
+                    if(clients.get(i).isConnected()) {
+                        connectedCount++;
+                        if(clients.get(i).getClient().getPlayerStatus()) {
+                            readyCount++;
+                        }
+                    }
+                }
+                if(readyCount >= connectedCount && connectedCount > 0) {
+                    int countdown = 8;
+                    for(int j = countdown; j >= 0; j--) {
+                        if(readyCount >= connectedCount) {
+                            for(int i = 0; i < clients.size(); i++) {
+                                if(clients.get(i).isConnected()) {
+                                    try {
+                                        appendLog("Starting game in " + countdown);
+                                        Thread.sleep(1000);
+                                        clients.get(i).getClient().sendCommand(6);
+                                        clients.get(i).getClient().sendIndex(countdown);
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        running = false;
+                                    }
+                                }
+                            }
+                            countdown--;
+                            if(countdown <= 0) {
+                                appendLog("Game starting!");
+                                return;
+                            }
+                        } else {
+                            appendLog("Stopping countdown.");
+                            j = 0;
+                        }
+                    }
+                }
+            }
+        
+        }).start();
     }
 
 }

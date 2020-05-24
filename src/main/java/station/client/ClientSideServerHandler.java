@@ -133,7 +133,8 @@ public class ClientSideServerHandler {
             boolean running = true;
             while (running) {
                 try {
-                    switch (fromServer.readInt()) {
+                    int command = fromServer.readInt();
+                    switch (command) {
                         case 0:
                             connectedPos = fromServer.readInt();
                             System.out.println("My position is " + connectedPos);
@@ -149,10 +150,14 @@ public class ClientSideServerHandler {
                             Client.updatePlayerStatus(fromServer.readInt(),
                                     fromServer.readBoolean());
                             break;
+                        case 6:
+                            int countDown = fromServer.readInt();
+                            Client.updateStatusLabel("Game will start in " + countDown + " seconds.");
+                            break;
                         case 999:
                             break;
                         default:
-                            throw new UnknownCommandException("error");
+                            throw new UnknownCommandException("Recieved " + command);
                     }
                 } catch (SocketException close) { 
                     System.out.println("Closing.");

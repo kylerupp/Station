@@ -8,6 +8,7 @@
 
 package station.client;
 
+import station.client.ui.ConnectScreen;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -258,6 +259,10 @@ public class Client extends Frame {
     
     public static void updatePlayerStatus(int index, boolean ready) {
         connectScreen.updatePlayerStatus(index, ready);
+    }
+    
+    public static void updateStatusLabel(String text) {
+        connectScreen.updateStatusLabel(text);
     }
 
 }
