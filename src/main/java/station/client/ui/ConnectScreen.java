@@ -126,6 +126,10 @@ public class ConnectScreen {
         return ready;
     }
     
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+    
     public JPanel getPanel() {
         return panel;
     }

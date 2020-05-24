@@ -19,6 +19,7 @@ public class GameMenu {
     private JPanel panel;
     
     private JButton action;
+    private JButton lobby;
     
     private Client client;
     
@@ -36,9 +37,15 @@ public class GameMenu {
                 + "! First to press the button wins!");
         
         action = new JButton("Win!");
+        lobby = new JButton("Lobby");
         
         panel.add(status);
         panel.add(action);
+        panel.add(lobby);
+        
+        lobby.addActionListener(e -> {
+            client.changeScene(3);
+        });
         
         action.addActionListener(e -> {
             try {
@@ -55,14 +62,17 @@ public class GameMenu {
         return panel;
     }
     
+    public void startGame() {
+        status.setText("Game has started!");
+        action.setEnabled(true);
+        lobby.setEnabled(false);
+    }
+    
+    
     public void endGame(String winner) {
         action.setEnabled(false);
         status.setText(winner);
-        JButton lobby = new JButton("Lobby");
-        panel.add(lobby);
-        lobby.addActionListener(e -> {
-            client.changeScene(3);
-        });
+        lobby.setEnabled(true);
     }
     
 }

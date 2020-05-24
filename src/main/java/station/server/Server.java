@@ -199,6 +199,7 @@ public class Server extends Frame {
                                                     + " has won!");
                                 }
                             }
+                            startGameLoop();
                             break;
                         case 999:
                             disconnectUser(client.getIndex());

@@ -284,19 +284,28 @@ public class Client extends Frame {
                 this.remove(mainPanel);
                 mainPanel = connectPanel();
                 this.add(mainPanel);
+                this.repaint();
                 this.revalidate();
                 break;
             case 2:
                 this.remove(mainPanel);
                 mainPanel = game.getPanel();
                 this.add(mainPanel);
+                startGame();
+                this.repaint();
                 this.revalidate();
+                try {
+                    handler.sendCommand(3);
+                    handler.sendStatus(false);
+                    connectScreen.setReady(false);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 break;
             case 3:
                 this.remove(mainPanel);
                 mainPanel = connectScreen.getPanel();
                 this.add(mainPanel);
-                //this.revalidate();
                 this.repaint();
                 break;
             default:
@@ -310,6 +319,10 @@ public class Client extends Frame {
     
     public void endGame(String winner) {
         game.endGame(winner);
+    }
+    
+    public void startGame() {
+        game.startGame();
     }
 
 }
