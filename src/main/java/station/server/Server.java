@@ -191,8 +191,8 @@ public class Server extends Frame {
                             break;
                         case 13:
                             int winner = client.getIndex();
-                            for(int i = 0; i < clients.size(); i++) {
-                                if(clients.get(i).isConnected()) {
+                            for (int i = 0; i < clients.size(); i++) {
+                                if (clients.get(i).isConnected()) {
                                     clients.get(i).getClient().sendCommand(62);
                                     clients.get(i).getClient()
                                             .sendMessage(clients.get(winner).getName() 

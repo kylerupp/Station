@@ -272,6 +272,12 @@ public class Client extends Frame {
         connectScreen.updateStatusLabel(text);
     }
     
+    /**
+     * Changes the scene based off of the input. 1 is the connection to server panel. 2 is the game
+     * panel.
+     * 
+     * @param scene Integer of the scene to switch to.
+     */
     public void changeScene(int scene) {
         switch (scene) {
             case 1:
@@ -286,6 +292,8 @@ public class Client extends Frame {
                 this.add(mainPanel);
                 this.revalidate();
                 break;
+            default:
+                System.out.println("Error has occured.");
         }
     }
     

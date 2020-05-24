@@ -22,12 +22,18 @@ public class GameMenu {
     
     private Client client;
     
+    /**
+     * Creates the main game menu.
+     * 
+     * @param client The client to interact with.
+     */
     public GameMenu(Client client) {
         this.client = client;
         
         panel = new JPanel();
         
-        status = new JLabel("Game has started! First to press the button wins!");
+        status = new JLabel("Game has started" + client.getName() 
+                + "! First to press the button wins!");
         
         action = new JButton("Win!");
         

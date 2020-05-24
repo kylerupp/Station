@@ -24,6 +24,7 @@ public class MainMenu {
     JPanel panel = new JPanel();
     
     Client client;
+    
     /**
      * Constructor to make the main menu.
      */
@@ -35,7 +36,8 @@ public class MainMenu {
         panel.add(onlineButton);
         
         offlineButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "You should look into getting internet.\n(Offline is not yet implemented)");
+            JOptionPane.showMessageDialog(null, 
+                    "You should look into getting internet.\n(Offline is not yet implemented)");
             System.out.println("Playing Offline!");
             
         });

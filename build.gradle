@@ -63,6 +63,10 @@ checkstyle {
     }
   }
 
+spotbugs {
+  ignoreFailures = true
+}
+
 task(server, dependsOn: 'classes', type: JavaExec) {
 	main = 'station.MainServer'
 	classpath = sourceSets.main.runtimeClasspath
