@@ -8,7 +8,6 @@
 
 package station.client;
 
-import station.client.ui.ConnectScreen;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -26,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import station.client.ui.ConnectScreen;
 
 public class Client extends Frame {
     
@@ -152,7 +152,7 @@ public class Client extends Frame {
                             Integer.parseInt(portField.getText()));
                 }
                 
-                connectScreen = new ConnectScreen(8, handler);
+                connectScreen = new ConnectScreen(8, handler, nameField.getText());
                 
                 if (handler.sendCommand(1)) {
                     handler.setName(nameField.getText());

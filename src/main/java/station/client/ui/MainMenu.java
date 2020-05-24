@@ -21,6 +21,9 @@ public class MainMenu {
     
     JPanel panel = new JPanel();
     
+    /**
+     * Constructor to make the main menu.
+     */
     public MainMenu() {
         panel.setLayout(new GridLayout(3, 1));
         panel.add(title);

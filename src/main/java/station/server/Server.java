@@ -264,41 +264,42 @@ public class Server extends Frame {
         new Thread(() -> {
         
             boolean running = true;
-            while(running) {
-                int connectedCount = 0;
-                int readyCount = 0;
-                for(int i = 0; i < clients.size(); i++) {
-                    if(clients.get(i).isConnected()) {
-                        connectedCount++;
-                        if(clients.get(i).getClient().getPlayerStatus()) {
-                            readyCount++;
-                        }
-                    }
-                }
-                if(readyCount >= connectedCount && connectedCount > 0) {
+            while (running) {
+                int connectedCount = getConnectedCount();
+                if (isEveryoneReady() && connectedCount > 0) {
                     int countdown = 8;
-                    for(int j = countdown; j >= 0; j--) {
-                        if(readyCount >= connectedCount) {
-                            for(int i = 0; i < clients.size(); i++) {
-                                if(clients.get(i).isConnected()) {
-                                    try {
-                                        appendLog("Starting game in " + countdown);
-                                        Thread.sleep(1000);
-                                        clients.get(i).getClient().sendCommand(6);
-                                        clients.get(i).getClient().sendIndex(countdown);
-                                    } catch (Exception ex) {
-                                        ex.printStackTrace();
-                                        running = false;
+                    for (int j = countdown; j >= 0; j--) {
+                        if (isEveryoneReady()) {
+                            try {
+                                sendCountdown(countdown);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                running = false;
+                            }
+     
+                            countdown--;
+                            if (countdown <= 0) {
+                                appendLog("Game starting!");
+                                for (int i = 0; i < clients.size(); i++) {
+                                    if (clients.get(i).isConnected()) {
+                                        try {
+                                            clients.get(i).getClient().sendCommand(60);
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
+                                            running = false;
+                                        }
                                     }
                                 }
-                            }
-                            countdown--;
-                            if(countdown <= 0) {
-                                appendLog("Game starting!");
                                 return;
                             }
                         } else {
                             appendLog("Stopping countdown.");
+                            try {
+                                sendCountdown(-2);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                running = false;
+                            }
                             j = 0;
                         }
                     }
@@ -306,6 +307,41 @@ public class Server extends Frame {
             }
         
         }).start();
+    }
+    
+    private boolean isEveryoneReady() {
+        int connectedCount = 0;
+        int readyCount = 0;
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {
+                connectedCount++;
+                if (clients.get(i).getClient().getPlayerStatus()) {
+                    readyCount++;
+                }
+            }
+        }
+        return readyCount >= connectedCount;
+    }
+    
+    private int getConnectedCount() {
+        int connectedCount = 0;
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {
+                connectedCount++;
+            }
+        }
+        return connectedCount;
+    }
+    
+    private void sendCountdown(int countdown) throws Exception {
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {    
+                appendLog("Starting game in " + countdown);
+                Thread.sleep(1000);
+                clients.get(i).getClient().sendCommand(6);
+                clients.get(i).getClient().sendIndex(countdown);
+            } 
+        }
     }
 
 }

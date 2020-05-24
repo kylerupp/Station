@@ -39,12 +39,12 @@ public class ConnectScreen {
      * 
      * @param size of the maximum lobby connection.
      */
-    public ConnectScreen(int size, ClientSideServerHandler client) {
+    public ConnectScreen(int size, ClientSideServerHandler client, String name) {
         this.handler = client;
         
-        panel = new JPanel();
+        panel = new JPanel(new BorderLayout());
         
-        infoLabel = new JLabel("Welcome, " + handler.getName());
+        infoLabel = new JLabel("Welcome, " + name);
         
         this.size = size;
         JPanel infoPanel = new JPanel(new GridLayout(4, 4));

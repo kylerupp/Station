@@ -152,7 +152,12 @@ public class ClientSideServerHandler {
                             break;
                         case 6:
                             int countDown = fromServer.readInt();
-                            Client.updateStatusLabel("Game will start in " + countDown + " seconds.");
+                            if (countDown > 0) {
+                                Client.updateStatusLabel("Game will start in " 
+                                        + countDown + " seconds.");
+                            } else {
+                                Client.updateStatusLabel("Countdown stopped! Player unready.");
+                            }
                             break;
                         case 999:
                             break;
