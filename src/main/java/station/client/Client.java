@@ -166,6 +166,7 @@ public class Client extends Frame {
                     handler.sendMessage(nameField.getText());
                     handler.sendCommand(0);
                     handler.commandListener();
+                    handler.sendCommand(5);
                 }
                 
                 this.remove(mainPanel);

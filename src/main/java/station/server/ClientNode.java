@@ -12,6 +12,7 @@ public class ClientNode {
     private HandleClient client;
     private int index;
     private boolean connected;
+    private boolean ready;
     
     /**
      * Creates a node to store the information for a client. Index and client i/o should be given.
@@ -24,6 +25,7 @@ public class ClientNode {
         this.client = client;
         this.index = index;
         connected = false;
+        ready = false;
     }
     
     /**
@@ -56,6 +58,14 @@ public class ClientNode {
     
     public boolean isConnected() {
         return connected;
+    }
+    
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+    
+    public boolean isReady() {
+        return ready;
     }
 
 }

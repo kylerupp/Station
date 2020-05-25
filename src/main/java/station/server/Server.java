@@ -174,8 +174,7 @@ public class Server extends Frame {
                                     }
                                 }
                             }
-                            System.out.println("Client " + clients.get(index).getName() 
-                                    + " is ready " + send);
+                            clients.get(index).setReady(send);
                             if (send) {
                                 appendLog(clients.get(index).getClient().getName() + " is ready.");
                             } else {
@@ -197,6 +196,12 @@ public class Server extends Frame {
                                 userDisconnect.printStackTrace();
                                 disconnectUser(tracker);
                             }
+                            break;
+                        case 5:
+                            for(int i = 0; i < clients.size(); i++) {
+                                client.sendCommand(4);
+                                client.sendStatus(i, clients.get(i).isReady());
+                            }   
                             break;
                         case 13:
                             int winner = client.getIndex();

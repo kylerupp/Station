@@ -45,6 +45,7 @@ public class GameMenu {
         
         lobby.addActionListener(e -> {
             client.changeScene(3);
+            client.getHandler().sendCommand(5);
         });
         
         action.addActionListener(e -> {
