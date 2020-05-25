@@ -51,9 +51,15 @@ public class Server extends Frame {
                 socket = new ServerSocket(8000);
                 appendLog("Server started at " + socket.getInetAddress().getHostAddress() 
                         + ":" + socket.getLocalPort());
+                
+                appendLog("Starting game loop...");
+                
+                startGameLoop();
+                
                 appendLog("Waiting for clients to join the session...");
                 
                 //listen for connections
+                
                 new Thread(() -> {
                     try {
                         //player connecction
@@ -159,8 +165,7 @@ public class Server extends Frame {
                                     }
                                 }
                             }
-                            System.out.println("Client " + clients.get(index).getName() 
-                                    + " is ready " + send);
+                            clients.get(index).setReady(send);
                             if (send) {
                                 appendLog(clients.get(index).getClient().getName() + " is ready.");
                             } else {
@@ -182,6 +187,24 @@ public class Server extends Frame {
                                 userDisconnect.printStackTrace();
                                 disconnectUser(tracker);
                             }
+                            break;
+                        case 5:
+                            for (int i = 0; i < clients.size(); i++) {
+                                client.sendCommand(4);
+                                client.sendStatus(i, clients.get(i).isReady());
+                            }   
+                            break;
+                        case 13:
+                            int winner = client.getIndex();
+                            for (int i = 0; i < clients.size(); i++) {
+                                if (clients.get(i).isConnected()) {
+                                    clients.get(i).getClient().sendCommand(62);
+                                    clients.get(i).getClient()
+                                            .sendMessage(clients.get(winner).getName() 
+                                                    + " has won!");
+                                }
+                            }
+                            startGameLoop();
                             break;
                         case 999:
                             disconnectUser(client.getIndex());
@@ -252,6 +275,90 @@ public class Server extends Frame {
     
     private void appendLog(String msg) {
         log.append("[" + new Date() + "] " + msg + "\n");
+    }
+    
+    private void startGameLoop() {
+        new Thread(() -> {
+        
+            boolean running = true;
+            while (running) {
+                int connectedCount = getConnectedCount();
+                if (isEveryoneReady() && connectedCount > 0) {
+                    int countdown = 8;
+                    for (int j = countdown; j >= 0; j--) {
+                        if (isEveryoneReady()) {
+                            try {
+                                sendCountdown(countdown);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                running = false;
+                            }
+     
+                            countdown--;
+                            if (countdown <= 0) {
+                                appendLog("Game starting!");
+                                for (int i = 0; i < clients.size(); i++) {
+                                    if (clients.get(i).isConnected()) {
+                                        try {
+                                            clients.get(i).getClient().sendCommand(60);
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
+                                            running = false;
+                                        }
+                                    }
+                                }
+                                return;
+                            }
+                        } else {
+                            appendLog("Stopping countdown.");
+                            try {
+                                sendCountdown(-2);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                running = false;
+                            }
+                            j = 0;
+                        }
+                    }
+                }
+            }
+        
+        }).start();
+    }
+    
+    private boolean isEveryoneReady() {
+        int connectedCount = 0;
+        int readyCount = 0;
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {
+                connectedCount++;
+                if (clients.get(i).getClient().getPlayerStatus()) {
+                    readyCount++;
+                }
+            }
+        }
+        return readyCount >= connectedCount;
+    }
+    
+    private int getConnectedCount() {
+        int connectedCount = 0;
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {
+                connectedCount++;
+            }
+        }
+        return connectedCount;
+    }
+    
+    private void sendCountdown(int countdown) throws IOException, InterruptedException {
+        appendLog("Starting game in " + countdown);
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {    
+                clients.get(i).getClient().sendCommand(6);
+                clients.get(i).getClient().sendIndex(countdown);
+            } 
+        }
+        Thread.sleep(1000);
     }
 
 }

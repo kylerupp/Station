@@ -25,6 +25,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import station.client.ui.ConnectScreen;
+import station.client.ui.GameMenu;
+import station.client.ui.MainMenu;
 
 public class Client extends Frame {
     
@@ -32,7 +35,9 @@ public class Client extends Frame {
     private final JTextField nameField = new JTextField();
     private JPanel mainPanel;
     
+    private MainMenu mainMenu = new MainMenu(this);
     private static ConnectScreen connectScreen;
+    private GameMenu game = new GameMenu(this);
     
     private TextArea feed;
     
@@ -45,7 +50,10 @@ public class Client extends Frame {
         this.setSize(new Dimension(500, 300));
         this.setResizable(false);
         
-        mainPanel = connectPanel();
+        this.setLocationRelativeTo(null);
+        
+        mainPanel = mainMenu.getPanel();
+        //mainPanel = connectPanel();
         this.add(mainPanel);
         
         this.setTitle("Client");
@@ -141,23 +149,24 @@ public class Client extends Frame {
             try {
                 if (serverField.getText().isEmpty()) {
                     if (portField.getText().isEmpty()) {
-                        handler = new ClientSideServerHandler("localHost", 8000);
+                        handler = new ClientSideServerHandler("localHost", 8000, this);
                     } else {
                         handler = new ClientSideServerHandler("localHost",
-                                Integer.parseInt(portField.getText()));
+                                Integer.parseInt(portField.getText()), this);
                     }
                 } else {
                     handler = new ClientSideServerHandler(serverField.getText(),
-                            Integer.parseInt(portField.getText()));
+                            Integer.parseInt(portField.getText()), this);
                 }
                 
-                connectScreen = new ConnectScreen(8, handler);
+                connectScreen = new ConnectScreen(8, handler, nameField.getText());
                 
                 if (handler.sendCommand(1)) {
                     handler.setName(nameField.getText());
                     handler.sendMessage(nameField.getText());
                     handler.sendCommand(0);
                     handler.commandListener();
+                    handler.sendCommand(5);
                 }
                 
                 this.remove(mainPanel);
@@ -258,6 +267,63 @@ public class Client extends Frame {
     
     public static void updatePlayerStatus(int index, boolean ready) {
         connectScreen.updatePlayerStatus(index, ready);
+    }
+    
+    public static void updateStatusLabel(String text) {
+        connectScreen.updateStatusLabel(text);
+    }
+    
+    /**
+     * Changes the scene based off of the input. 1 is the connection to server panel. 2 is the game
+     * panel.
+     * 
+     * @param scene Integer of the scene to switch to.
+     */
+    public void changeScene(int scene) {
+        switch (scene) {
+            case 1:
+                this.remove(mainPanel);
+                mainPanel = connectPanel();
+                this.add(mainPanel);
+                this.repaint();
+                this.revalidate();
+                break;
+            case 2:
+                this.remove(mainPanel);
+                mainPanel = game.getPanel();
+                this.add(mainPanel);
+                startGame();
+                this.repaint();
+                this.revalidate();
+                try {
+                    handler.sendCommand(3);
+                    handler.sendStatus(false);
+                    connectScreen.setReady(false);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                break;
+            case 3:
+                this.remove(mainPanel);
+                mainPanel = connectScreen.getPanel();
+                this.add(mainPanel);
+                this.repaint();
+                break;
+            default:
+                System.out.println("Error has occured.");
+        }
+    }
+    
+    public ClientSideServerHandler getHandler() {
+        return handler;
+    }
+    
+    public void endGame(String winner) {
+        game.endGame(winner);
+    }
+    
+    public void startGame() {
+        game.startGame();
     }
 
 }

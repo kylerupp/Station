@@ -26,6 +26,8 @@ public class ClientSideServerHandler {
     
     private String name;
     
+    private Client client;
+    
     /**
      * Constructor for the client side server handler. Takes in a host as a string and a port as an
      * int.
@@ -34,7 +36,9 @@ public class ClientSideServerHandler {
      * @param port Port for the server.
      * @throws ConnectException if the client cannot connect.
      */
-    public ClientSideServerHandler(String host, int port) throws ConnectException {
+    public ClientSideServerHandler(String host, int port, Client client) throws ConnectException {
+        this.client = client;
+        
         try {
             Socket socket = new Socket(host, port);
         
@@ -133,7 +137,8 @@ public class ClientSideServerHandler {
             boolean running = true;
             while (running) {
                 try {
-                    switch (fromServer.readInt()) {
+                    int command = fromServer.readInt();
+                    switch (command) {
                         case 0:
                             connectedPos = fromServer.readInt();
                             System.out.println("My position is " + connectedPos);
@@ -149,10 +154,25 @@ public class ClientSideServerHandler {
                             Client.updatePlayerStatus(fromServer.readInt(),
                                     fromServer.readBoolean());
                             break;
+                        case 6:
+                            int countDown = fromServer.readInt();
+                            if (countDown > 0) {
+                                Client.updateStatusLabel("Game will start in " 
+                                        + countDown + " seconds.");
+                            } else {
+                                Client.updateStatusLabel("Countdown stopped! Player unready.");
+                            }
+                            break;
+                        case 60:
+                            client.changeScene(2);
+                            break;
+                        case 62:
+                            client.endGame(fromServer.readUTF());
+                            break;
                         case 999:
                             break;
                         default:
-                            throw new UnknownCommandException("error");
+                            throw new UnknownCommandException("Recieved " + command);
                     }
                 } catch (SocketException close) { 
                     System.out.println("Closing.");

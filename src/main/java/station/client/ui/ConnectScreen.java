@@ -5,7 +5,7 @@
 * @version April 2020
 */
 
-package station.client;
+package station.client.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import station.client.ClientSideServerHandler;
 
 public class ConnectScreen {
     
@@ -27,6 +28,8 @@ public class ConnectScreen {
     private List playerLabels;
     private List playerReadyStatus;
     
+    private JLabel infoLabel;
+    
     private int size;
     private boolean ready = false;
     
@@ -36,10 +39,12 @@ public class ConnectScreen {
      * 
      * @param size of the maximum lobby connection.
      */
-    public ConnectScreen(int size, ClientSideServerHandler client) {
+    public ConnectScreen(int size, ClientSideServerHandler client, String name) {
         this.handler = client;
         
-        panel = new JPanel();
+        panel = new JPanel(new BorderLayout());
+        
+        infoLabel = new JLabel("Welcome, " + name);
         
         this.size = size;
         JPanel infoPanel = new JPanel(new GridLayout(4, 4));
@@ -73,6 +78,7 @@ public class ConnectScreen {
         
         panel.add(readyButton, BorderLayout.NORTH);
         panel.add(infoPanel, BorderLayout.CENTER);
+        panel.add(infoLabel, BorderLayout.SOUTH);
     }
     
     /**
@@ -112,8 +118,16 @@ public class ConnectScreen {
         return true;
     }
     
+    public void updateStatusLabel(String text) {
+        infoLabel.setText(text);
+    }
+    
     public boolean isReady() {
         return ready;
+    }
+    
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
     
     public JPanel getPanel() {
