@@ -136,15 +136,6 @@ public class Server extends Frame {
                                                 + " to " + client.getName());
                                         client.sendCommand(0);
                                         client.sendIndex(i);
-                                        /*for(int j = 0; j < clients.size(); j++) {
-                                            if(clients.get(j).isConnected()) {
-                                                System.out.println("Sending ready " + j + " to " 
-                                                        + client.getName());
-                                                client.sendCommand(4);
-                                                client.sendStatus(j, 
-                                                clients.get(j).getClient().getStatus());
-                                            }
-                                        }*/
                                     }
                                 }
                             }
@@ -198,7 +189,7 @@ public class Server extends Frame {
                             }
                             break;
                         case 5:
-                            for(int i = 0; i < clients.size(); i++) {
+                            for (int i = 0; i < clients.size(); i++) {
                                 client.sendCommand(4);
                                 client.sendStatus(i, clients.get(i).isReady());
                             }   

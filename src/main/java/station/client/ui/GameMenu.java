@@ -63,13 +63,22 @@ public class GameMenu {
         return panel;
     }
     
+    /**
+     * Called whenever the game is started. It updates the games status label and only enables the
+     * game buttons.
+     */
     public void startGame() {
         status.setText("Game has started!");
         action.setEnabled(true);
         lobby.setEnabled(false);
     }
     
-    
+    /**
+     * Called whenever the game is finished. It will update the status label with the winner and
+     * only enable the return to lobby button.
+     * 
+     * @param winner String of the winner.
+     */
     public void endGame(String winner) {
         action.setEnabled(false);
         status.setText(winner);
