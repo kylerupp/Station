@@ -8,6 +8,7 @@
 ### Fixes
 	- Center client window on startup.
 	- Countdown bug where countdown would multiply istelf by the amount of each player connected.
+	- When a player connects ready status for all players will update.
 
 ## Update 0.0.3
 
