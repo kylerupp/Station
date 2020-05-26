@@ -225,32 +225,34 @@ public class Server extends Frame {
                         if (isEveryoneReady()) {
                             try {
                                 sendCountdown(countdown);
-                            } catch (Exception ex) {
+                            } catch (IOException ex) {
                                 ex.printStackTrace();
+                                running = false;
+                            } catch (InterruptedException iex) {
+                                iex.printStackTrace();
                                 running = false;
                             }
      
                             countdown--;
                             if (countdown <= 0) {
-                                appendLog("Game starting!");
-                                for (int i = 0; i < clients.size(); i++) {
-                                    if (clients.get(i).isConnected()) {
-                                        try {
-                                            clients.get(i).getClient().sendCommand(60);
-                                        } catch (IOException ex) {
-                                            ex.printStackTrace();
-                                            running = false;
-                                        }
-                                    }
-                                }
-                                return;
+                                
+                            try {
+                                sendGameStartCommand();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                                running = false;
+                            }
+                            return;
                             }
                         } else {
                             appendLog("Stopping countdown.");
                             try {
                                 sendCountdown(-2);
-                            } catch (Exception ex) {
+                            } catch (IOException ex) {
                                 ex.printStackTrace();
+                                running = false;
+                            } catch (InterruptedException intEx) {
+                                intEx.printStackTrace();
                                 running = false;
                             }
                             j = 0;
@@ -287,7 +289,7 @@ public class Server extends Frame {
     }
     
     private void sendCountdown(int countdown) throws IOException, InterruptedException {
-        if(countdown > 0) {
+        if (countdown > 0) {
             appendLog("Starting game in " + countdown);
         }
         for (int i = 0; i < clients.size(); i++) {
@@ -374,6 +376,15 @@ public class Server extends Frame {
             }
         }
         startGameLoop();
+    }
+    
+    private void sendGameStartCommand() throws IOException {
+        appendLog("Game starting!");
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {
+                clients.get(i).getClient().sendCommand(60);
+            }
+        }
     }
 
 }
