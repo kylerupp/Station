@@ -325,5 +325,9 @@ public class Client extends Frame {
     public void startGame() {
         game.startGame();
     }
+    
+    public void updateTurnCounter(int turn) {
+        game.updateTurnCounter(turn);
+    }
 
 }

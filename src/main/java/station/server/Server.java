@@ -54,7 +54,7 @@ public class Server extends Frame {
                 
                 appendLog("Starting game loop...");
                 
-                startGameLoop();
+                startCountdown();
                 
                 appendLog("Waiting for clients to join the session...");
                 
@@ -213,7 +213,7 @@ public class Server extends Frame {
         log.append("[" + new Date() + "] " + msg + "\n");
     }
     
-    private void startGameLoop() {
+    private void startCountdown() {
         new Thread(() -> {
         
             boolean running = true;
@@ -236,13 +236,14 @@ public class Server extends Frame {
                             countdown--;
                             if (countdown <= 0) {
                                 
-                            try {
-                                sendGameStartCommand();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                                running = false;
-                            }
-                            return;
+                                try {
+                                    sendGameStartCommand();
+                                    startGameLoop();
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
+                                    running = false;
+                                }
+                                return;
                             }
                         } else {
                             appendLog("Stopping countdown.");
@@ -261,6 +262,39 @@ public class Server extends Frame {
                 }
             }
         
+        }).start();
+    }
+    
+    private void startGameLoop() {
+        new Thread(() -> {
+            boolean running = true;
+            
+            int players = getConnectedCount();
+            
+            int turn = 0;
+            
+            while (running) {
+                try {
+                    Thread.sleep(1000);
+                    if (turn > 10) {
+                        running = false;
+                    } else {
+                        turn++;
+                        for (int i = 0; i < clients.size(); i++) {
+                            if (clients.get(i).isConnected()) {
+                                clients.get(i).getClient().sendCommand(70);
+                                clients.get(i).getClient().sendIndex(turn);
+                            }
+                        }
+                    }
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                    running = false;
+                } catch (IOException ioex) {
+                    ioex.printStackTrace();
+                    running = false;
+                }
+            }
         }).start();
     }
     
@@ -375,7 +409,7 @@ public class Server extends Frame {
                 clients.get(i).getClient().sendMessage(clients.get(winner).getName() + " has won!");
             }
         }
-        startGameLoop();
+        startCountdown();
     }
     
     private void sendGameStartCommand() throws IOException {

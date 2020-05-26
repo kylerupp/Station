@@ -16,6 +16,8 @@ import station.client.Client;
 public class GameMenu {
 
     private JLabel status;
+    private JLabel turnCounter;
+    
     private JPanel panel;
     
     private JButton action;
@@ -39,9 +41,13 @@ public class GameMenu {
         action = new JButton("Win!");
         lobby = new JButton("Lobby");
         
+        
         panel.add(status);
         panel.add(action);
         panel.add(lobby);
+        
+        turnCounter = new JLabel("Turn 0");
+        panel.add(turnCounter);
         
         lobby.addActionListener(e -> {
             client.changeScene(3);
@@ -83,6 +89,10 @@ public class GameMenu {
         action.setEnabled(false);
         status.setText(winner);
         lobby.setEnabled(true);
+    }
+    
+    public void updateTurnCounter(int turn) {
+        turnCounter.setText("Turn " + turn);
     }
     
 }
