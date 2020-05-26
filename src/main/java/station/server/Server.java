@@ -128,83 +128,19 @@ public class Server extends Frame {
                     int command = client.getCommand();
                     switch (command) {
                         case 0:
-                            System.out.println("New client connected");
-                            for (int i = 0; i < clients.size(); i++) {
-                                if (clients.get(i).getClient() != null) {
-                                    if (clients.get(i).getClient().equals(client)) {
-                                        System.out.println("Sending position " + i
-                                                + " to " + client.getName());
-                                        client.sendCommand(0);
-                                        client.sendIndex(i);
-                                    }
-                                }
-                            }
+                            newConnection(client);
                             break;
                         case 1:
-                            System.out.println("Recieved name!");
-                            for (int i = 0; i < clients.size(); i++) {
-                                if (clients.get(i).isConnected()) {
-                                    for (int j = 0; j < clients.size(); j++) {
-                                        System.out.println("Sending " + clients.get(j).getName() 
-                                                + " to client " + i);
-                                        clients.get(i).getClient().sendCommand(2);
-                                        clients.get(i).getClient()
-                                                .sendConnect(j, clients.get(j).getName());
-                                    }
-                                }
-                            }
+                            newOtherClientConnection(client);
                             break;
                         case 3:
-                            System.out.println("Updating players status");
-                            boolean send = client.getStatus();
-                            int index = 0;
-                            for (int i = 0; i < clients.size(); i++) {
-                                if (clients.get(i).isConnected()) {
-                                    if (clients.get(i).getClient().equals(client)) {
-                                        index = i;
-                                    }
-                                }
-                            }
-                            clients.get(index).setReady(send);
-                            if (send) {
-                                appendLog(clients.get(index).getClient().getName() + " is ready.");
-                            } else {
-                                appendLog(clients.get(index).getClient().getName() 
-                                        + " is unready.");
-                            }
-                            int tracker = 0;
-                            try {
-                                for (int i = 0; i < clients.size(); i++) {
-                                    tracker = i;
-                                    if (clients.get(i).isConnected()) {
-                                        System.out.println(clients.get(i).getClient().getName() 
-                                                + " is connected.");
-                                        clients.get(i).getClient().sendCommand(4);
-                                        clients.get(i).getClient().sendStatus(index, send);
-                                    }
-                                }
-                            } catch (SocketException userDisconnect) {
-                                userDisconnect.printStackTrace();
-                                disconnectUser(tracker);
-                            }
+                            updatePlayerStatus(client);
                             break;
                         case 5:
-                            for (int i = 0; i < clients.size(); i++) {
-                                client.sendCommand(4);
-                                client.sendStatus(i, clients.get(i).isReady());
-                            }   
+                            sendAllPlayerStatus(client);  
                             break;
                         case 13:
-                            int winner = client.getIndex();
-                            for (int i = 0; i < clients.size(); i++) {
-                                if (clients.get(i).isConnected()) {
-                                    clients.get(i).getClient().sendCommand(62);
-                                    clients.get(i).getClient()
-                                            .sendMessage(clients.get(winner).getName() 
-                                                    + " has won!");
-                                }
-                            }
-                            startGameLoop();
+                            declareWinner(client);
                             break;
                         case 999:
                             disconnectUser(client.getIndex());
@@ -359,6 +295,83 @@ public class Server extends Frame {
             } 
         }
         Thread.sleep(1000);
+    }
+    
+    private void newConnection(HandleClient client) throws IOException {
+        System.out.println("New client connected");
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).getClient() != null) {
+                if (clients.get(i).getClient().equals(client)) {
+                    System.out.println("Sending position " + i + " to " + client.getName());
+                    client.sendCommand(0);
+                    client.sendIndex(i);
+                }
+            }
+        }
+    }
+    
+    private void newOtherClientConnection(HandleClient client) throws IOException {
+        System.out.println("Recieved name!");
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {
+                for (int j = 0; j < clients.size(); j++) {
+                    System.out.println("Sending " + clients.get(j).getName() + " to client " + i);
+                    clients.get(i).getClient().sendCommand(2);
+                    clients.get(i).getClient().sendConnect(j, clients.get(j).getName());
+                }
+            }
+        }
+    }
+    
+    private void updatePlayerStatus(HandleClient client) throws IOException {
+        System.out.println("Updating players status");
+        boolean send = client.getStatus();
+        int index = 0;
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {
+                if (clients.get(i).getClient().equals(client)) {
+                    index = i;
+                }
+            }
+        }
+        clients.get(index).setReady(send);
+        if (send) {
+            appendLog(clients.get(index).getClient().getName() + " is ready.");
+        } else {
+            appendLog(clients.get(index).getClient().getName() + " is unready.");
+        }
+        int tracker = 0;
+        try {
+            for (int i = 0; i < clients.size(); i++) {
+                tracker = i;
+                if (clients.get(i).isConnected()) {
+                    System.out.println(clients.get(i).getClient().getName() + " is connected.");
+                    clients.get(i).getClient().sendCommand(4);
+                    clients.get(i).getClient().sendStatus(index, send);
+                }
+            }
+        } catch (SocketException userDisconnect) {
+            userDisconnect.printStackTrace();
+            disconnectUser(tracker);
+        }
+    }
+    
+    private void sendAllPlayerStatus(HandleClient client) throws IOException {
+        for (int i = 0; i < clients.size(); i++) {
+            client.sendCommand(4);
+            client.sendStatus(i, clients.get(i).isReady());
+        }   
+    }
+    
+    private void declareWinner(HandleClient client) throws IOException {
+        int winner = client.getIndex();
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {
+                clients.get(i).getClient().sendCommand(62);
+                clients.get(i).getClient().sendMessage(clients.get(winner).getName() + " has won!");
+            }
+        }
+        startGameLoop();
     }
 
 }
