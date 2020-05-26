@@ -273,7 +273,7 @@ public class Server extends Frame {
                 }
             }
         }
-        return readyCount >= connectedCount;
+        return readyCount >= connectedCount && connectedCount > 0;
     }
     
     private int getConnectedCount() {
@@ -287,7 +287,9 @@ public class Server extends Frame {
     }
     
     private void sendCountdown(int countdown) throws IOException, InterruptedException {
-        appendLog("Starting game in " + countdown);
+        if(countdown > 0) {
+            appendLog("Starting game in " + countdown);
+        }
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).isConnected()) {    
                 clients.get(i).getClient().sendCommand(6);
