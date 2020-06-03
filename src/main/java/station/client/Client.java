@@ -37,7 +37,7 @@ public class Client extends Frame {
     
     private MainMenu mainMenu = new MainMenu(this);
     private static ConnectScreen connectScreen;
-    private GameMenu game = new GameMenu(this);
+    private GameMenu game = new GameMenu(this, 8);
     
     private TextArea feed;
     
@@ -328,6 +328,14 @@ public class Client extends Frame {
     
     public void updateTurnCounter(int turn) {
         game.updateTurnCounter(turn);
+    }
+    
+    public void updateTurnStatus(int index, boolean status) {
+        if(status) {
+            game.updateReadyBox(index, 1);
+        } else {
+            game.updateReadyBox(index, 0);
+        }
     }
 
 }

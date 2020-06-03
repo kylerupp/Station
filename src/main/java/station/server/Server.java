@@ -142,6 +142,9 @@ public class Server extends Frame {
                         case 13:
                             declareWinner(client);
                             break;
+                        case 15:
+                            updateEndTurn(client);
+                            break;
                         case 999:
                             disconnectUser(client.getIndex());
                             break;
@@ -417,6 +420,18 @@ public class Server extends Frame {
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).isConnected()) {
                 clients.get(i).getClient().sendCommand(60);
+            }
+        }
+    }
+    
+    private void updateEndTurn(HandleClient client) throws IOException {
+        int player = client.getIndex();
+        boolean status = client.getStatus();
+        clients.get(player).getClient().setEndTurn(status);
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).isConnected()) {
+                clients.get(i).getClient().sendCommand(64);
+                clients.get(i).getClient().sendStatus(player, status);
             }
         }
     }

@@ -169,6 +169,9 @@ public class ClientSideServerHandler {
                         case 62:
                             client.endGame(fromServer.readUTF());
                             break;
+                        case 64:
+                            client.updateTurnStatus(fromServer.readInt(), fromServer.readBoolean());
+                            break;
                         case 70:
                             client.updateTurnCounter(fromServer.readInt());
                             break;

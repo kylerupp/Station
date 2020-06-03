@@ -20,6 +20,7 @@ public class HandleClient {
     private DataOutputStream toClient;
     private String clientName;
     private boolean playerStatus = false;
+    private boolean endTurn = false;
     
     /**
      * Constructor for server side client handler.
@@ -125,5 +126,13 @@ public class HandleClient {
     
     public boolean getPlayerStatus() {
         return playerStatus;
+    }
+    
+    public boolean getEndTurn() {
+        return endTurn;
+    }
+    
+    public void setEndTurn(boolean endTurn) {
+        this.endTurn = endTurn;
     }
 }
