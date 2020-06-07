@@ -328,6 +328,7 @@ public class Client extends Frame {
     
     public void updateTurnCounter(int turn) {
         game.updateTurnCounter(turn);
+        game.unreadyBoxes();
     }
     
     public void updateTurnStatus(int index, boolean status) {

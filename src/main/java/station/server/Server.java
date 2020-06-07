@@ -278,6 +278,22 @@ public class Server extends Frame {
             
             while (running) {
                 try {
+                    if(isTurnOver()) {
+                        System.out.println("Ending turn");
+                        turn++;
+                        for (int i = 0; i < clients.size(); i++) {
+                            if (clients.get(i).isConnected()) {
+                                clients.get(i).getClient().sendCommand(70);
+                                clients.get(i).getClient().sendIndex(turn);
+                                endTurn();
+                            }
+                        }
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    running = false;
+                }
+                /*try {
                     Thread.sleep(1000);
                     if (turn > 10) {
                         running = false;
@@ -296,7 +312,7 @@ public class Server extends Frame {
                 } catch (IOException ioex) {
                     ioex.printStackTrace();
                     running = false;
-                }
+                }*/
             }
         }).start();
     }
@@ -428,10 +444,41 @@ public class Server extends Frame {
         int player = client.getIndex();
         boolean status = client.getStatus();
         clients.get(player).getClient().setEndTurn(status);
+        if(status) {
+            appendLog(client.getName() + " has ended their turn.");
+        }
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).isConnected()) {
                 clients.get(i).getClient().sendCommand(64);
                 clients.get(i).getClient().sendStatus(player, status);
+            }
+        }
+    }
+    
+    private boolean isTurnOver() {
+        if(getEndTurnCount() >= getConnectedCount()) {
+            System.out.println(getEndTurnCount() + " is " + getConnectedCount());
+            return true;
+        }
+        return false;
+    }
+    
+    private int getEndTurnCount() {
+        int count = 0;
+        for(int i = 0; i < clients.size(); i++) {
+            if(clients.get(i).isConnected()) {
+                if(clients.get(i).getClient().getEndTurn()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    private void endTurn() {
+        for(int i = 0; i < clients.size(); i++) {
+            if(clients.get(i).isConnected()) {
+                clients.get(i).getClient().setEndTurn(false);
             }
         }
     }

@@ -150,4 +150,12 @@ public class GameMenu {
         }
     }
     
+    public void unreadyBoxes() {
+        for(int i = 0; i < readyBoxes.size(); i++) {
+            JCheckBox box = (JCheckBox)readyBoxes.get(i);
+            box.setBackground(Color.red);
+            box.setSelected(false);
+        }
+    }
+    
 }
