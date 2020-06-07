@@ -92,6 +92,9 @@ public class Server extends Frame {
                                 }
                             }).start();
                         }
+                    } catch (SocketException closing) {
+                        System.out.println("Stopping listiner for new sockets. Closing.");
+                        System.exit(0);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
