@@ -172,8 +172,11 @@ public class ClientSideServerHandler {
                         case 64:
                             client.updateTurnStatus(fromServer.readInt(), fromServer.readBoolean());
                             break;
-                        case 70:
-                            client.updateTurnCounter(fromServer.readInt());
+                        case 66:
+                            client.finalizeTurn();
+                            break;
+                        case 68:
+                            client.endTurn(fromServer.readInt());
                             break;
                         case 999:
                             break;

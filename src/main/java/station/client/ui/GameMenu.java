@@ -32,6 +32,8 @@ public class GameMenu {
     
     private List readyBoxes;
     
+    private boolean turnEnding;
+    
     /**
      * Creates the main game menu.
      * 
@@ -84,12 +86,14 @@ public class GameMenu {
         });
         
         endTurn.addActionListener(e -> {
-            try {
-                client.getHandler().sendCommand(15);
-                client.getHandler().sendIndex(client.getHandler().getConnectedPos());
-                client.getHandler().sendStatus(true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if(!turnEnding) {
+                try {
+                    client.getHandler().sendCommand(15);
+                    client.getHandler().sendIndex(client.getHandler().getConnectedPos());
+                    client.getHandler().sendStatus(true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         
@@ -134,28 +138,38 @@ public class GameMenu {
     }
     
     public void updateReadyBox(int index, int status) {
-        JCheckBox box = (JCheckBox)readyBoxes.get(index);
-        switch (status) {
-            case 0:
-                box.setBackground(Color.red);
-                box.setSelected(false);
-                break;
-            case 1:
-                box.setBackground(Color.green);
-                box.setSelected(true);
-                break;
-            default:
-                box.setBackground(Color.gray);
-                box.setSelected(false);
+        if(!turnEnding) {
+            JCheckBox box = (JCheckBox)readyBoxes.get(index);
+            switch (status) {
+                case 0:
+                    box.setBackground(Color.red);
+                    box.setSelected(false);
+                    break;
+                case 1:
+                    box.setBackground(Color.green);
+                    box.setSelected(true);
+                    break;
+                default:
+                    box.setBackground(Color.gray);
+                    box.setSelected(false);
+            }
         }
     }
     
-    public void unreadyBoxes() {
+    public void unreadyBoxes(int nextTurn) {
         for(int i = 0; i < readyBoxes.size(); i++) {
             JCheckBox box = (JCheckBox)readyBoxes.get(i);
             box.setBackground(Color.red);
             box.setSelected(false);
         }
+        status.setText("Turn has ended.");
+        turnEnding = false;
+        turnCounter.setText("Turn " + nextTurn);
+    }
+    
+    public void finalizeTurn() {
+        status.setText("Ending Turn. Please wait...");
+        turnEnding = true;
     }
     
 }

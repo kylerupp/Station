@@ -64,7 +64,8 @@ checkstyle {
   }
 
 spotbugs {
-  ignoreFailures = true
+	toolVersion = '4.0.4'
+  	ignoreFailures = true
 }
 
 task(server, dependsOn: 'classes', type: JavaExec) {

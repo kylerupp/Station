@@ -280,22 +280,11 @@ public class Server extends Frame {
             int turn = 0;
             
             while (running) {
-                try {
                     if(isTurnOver()) {
                         System.out.println("Ending turn");
                         turn++;
-                        for (int i = 0; i < clients.size(); i++) {
-                            if (clients.get(i).isConnected()) {
-                                clients.get(i).getClient().sendCommand(70);
-                                clients.get(i).getClient().sendIndex(turn);
-                                endTurn();
-                            }
-                        }
+                        endTurn(turn);
                     }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    running = false;
-                }
                 /*try {
                     Thread.sleep(1000);
                     if (turn > 10) {
@@ -478,11 +467,25 @@ public class Server extends Frame {
         return count;
     }
     
-    private void endTurn() {
-        for(int i = 0; i < clients.size(); i++) {
-            if(clients.get(i).isConnected()) {
-                clients.get(i).getClient().setEndTurn(false);
+    private void endTurn(int turnNumber) {
+        try {
+            for(int i = 0; i < clients.size(); i++) {
+                if(clients.get(i).isConnected()) {
+                    clients.get(i).getClient().setEndTurn(false);
+                    clients.get(i).getClient().sendCommand(66);
+                }
             }
+            Thread.sleep(1000);
+            for(int i = 0; i < clients.size(); i++) {
+                if(clients.get(i).isConnected()) {
+                    clients.get(i).getClient().sendCommand(68);
+                    clients.get(i).getClient().sendIndex(turnNumber);
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (InterruptedException interrupt) {
+            interrupt.printStackTrace();
         }
     }
 

@@ -338,5 +338,13 @@ public class Client extends Frame {
             game.updateReadyBox(index, 0);
         }
     }
+    
+    public void finalizeTurn() {
+        game.finalizeTurn();
+    }
+    
+    public void endTurn(int nextTurn) {
+        game.unreadyBoxes(nextTurn);
+    }
 
 }
