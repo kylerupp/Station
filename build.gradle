@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.spotbugs" version "3.0.0"
+    id "com.github.spotbugs" version "4.4.2"
     id "checkstyle"
     id "pmd"
 }
@@ -56,7 +56,7 @@ checkstyle {
 // Configure SpotBugs
 /////////////////////////////////////////////////////////////////////////
  // To generate an HTML report instead of XML
-  tasks.withType(com.github.spotbugs.SpotBugsTask) {
+  tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
    reports {
       xml.enabled = false
       html.enabled = true
@@ -64,7 +64,6 @@ checkstyle {
   }
 
 spotbugs {
-	toolVersion = '4.0.4'
   	ignoreFailures = true
 }
 
