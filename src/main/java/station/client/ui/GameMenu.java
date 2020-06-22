@@ -138,7 +138,6 @@ public class GameMenu {
     }
     
     public void updateReadyBox(int index, int status) {
-        if(!turnEnding) {
             JCheckBox box = (JCheckBox)readyBoxes.get(index);
             switch (status) {
                 case 0:
@@ -153,7 +152,6 @@ public class GameMenu {
                     box.setBackground(Color.gray);
                     box.setSelected(false);
             }
-        }
     }
     
     public void unreadyBoxes(int nextTurn) {
